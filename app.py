@@ -33,7 +33,8 @@ def create_app(config=DevelopmentConfig):
         return {"error": "Request payload exceeds 16 KB limit."}, 413
 
     return app
-
+    
+app = create_app()
 
 if __name__ == "__main__":
     app = create_app()
