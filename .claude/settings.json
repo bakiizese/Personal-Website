@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.venv/bin/pip install *)",
+      "Bash(.venv/bin/python app.py)",
+      "Bash(curl -s http://localhost:5000/api/analytics)",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s http://localhost:5000/api/projects)",
+      "Bash(curl -s -X POST http://localhost:5000/api/contact -H 'Content-Type: application/json' -d '{\"name\":\"Bereket\",\"email\":\"bereketzeselassie@gmail.com\",\"message\":\"Test transmission from smoke test.\"}')",
+      "Bash(kill %1)"
+    ]
+  }
+}
