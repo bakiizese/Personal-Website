@@ -4,78 +4,42 @@ projects_bp = Blueprint("projects", __name__)
 
 _PROJECTS = [
     {
-        "slug": "amharic-pipeline",
-        "title": "Low-Resource Amharic Text Classification Pipeline",
-        "stack": ["PyTorch", "NumPy", "Python Native"],
+        "slug": "gym-membership-app",
+        "title": "Gym Membership Mobile App — Full-Stack Architecture",
+        "stack": ["Node.js", "PostgreSQL", "React Native", "REST APIs"],
         "states": [
             {
-                "label": "Ingestion & Serialization",
+                "label": "NFC/QR Hardware Integration",
                 "content": (
-                    "Custom syllable/character-level tokenizer mapping native Ge'ez scripts "
-                    "directly to dense, localized vocabulary coordinates — completely eliminating "
-                    "Western-biased tokenization bloat and Out-of-Vocabulary [UNK] flags."
+                    "Architected a secure local hardware integration layer using NFC and QR-based check-in "
+                    "protocols — raw scan events piped through a validation middleware chain to automate user "
+                    "identity resolution and structured data logging, eliminating manual entry error."
                 ),
             },
             {
-                "label": "Geometric Transformation",
+                "label": "Subscription Management & Data Pipeline",
                 "content": (
-                    "LongTensor (B, max_seq_len) passes to nn.Embedding to yield a 3D FloatTensor "
-                    "(B, max_seq_len, 32). Sequence dimension mean-pooling compresses to uniform shape (B, 32)."
+                    "Developed centralized backend architecture managing high-volume enterprise member subscriptions "
+                    "with real-time status resolution — subscription state materialized from event streams and "
+                    "surfaced through a typed REST API consumed by the React Native client."
                 ),
             },
             {
-                "label": "Logit Projection & Loss",
+                "label": "Analytics Dashboard & Reporting",
                 "content": (
-                    "Linear layer projects hidden states into unnormalized logit arrays (B, 3), "
-                    "optimized via Cross-Entropy Loss optimization curves."
+                    "Built administrative reporting infrastructure to aggregate, process, and output real-time "
+                    "operational analytics — raw PostgreSQL query results transformed into structured report "
+                    "payloads with configurable date-range filtering and export-ready formatting."
                 ),
             },
         ],
         "post_mortem": {
-            "title": "Resolving PyTorch Memory Bloat via Dynamic Mini-Batch Collation",
+            "title": "Resolving NFC Event Race Conditions Under Rapid Sequential Scans",
             "body": (
-                "In initial training runs, global padding caused severe tensor bloat by stretching all "
-                "variable-length sentences to a global maximum, saturating memory. Resolved by engineering "
-                "a custom dynamic collate function (collate_fn) inside the PyTorch DataLoader to dynamically "
-                "pad arrays to the maximum length only within that isolated mini-batch, reducing memory "
-                "overhead by 40% and stabilizing gradient updates."
-            ),
-        },
-    },
-    {
-        "slug": "log-router",
-        "title": "Deterministic Intelligent Log Routing Agent",
-        "stack": ["Python", "re", "asyncio", "JSON Schema", "Linux I/O"],
-        "states": [
-            {
-                "label": "Ingestion & Extraction",
-                "content": (
-                    "High-throughput line-by-line buffered stream parsing raw, multi-line error traces "
-                    "through compiled regular expression matching lanes."
-                ),
-            },
-            {
-                "label": "Schema Validation Firewall",
-                "content": (
-                    "Match-groups are cast to JSON payloads and put through an isolated, decoupled JSON Schema "
-                    "verification layer to enforce strict data contracts."
-                ),
-            },
-            {
-                "label": "Priority Routing & Write",
-                "content": (
-                    "Validated objects pass through an operational priority matrix and are written asynchronously "
-                    "using non-blocking file descriptors to isolated host directories (/logs/critical vs /logs/info)."
-                ),
-            },
-        ],
-        "post_mortem": {
-            "title": "Overcoming Ingestion Stalls from Greedy Multi-Line RegEx Over-Consumption",
-            "body": (
-                "Extended multi-line stack traces caused greedy dot-star (.*) patterns to breach valid log bounds, "
-                "pulling overlapping entries into single malformed objects and crashing the schema validator. "
-                "Resolved by refactoring the pipeline to non-greedy, anchoring expressions compiled with "
-                "re.MULTILINE and re.DOTALL flags to strictly enforce boundary integrity."
+                "Rapid successive NFC taps from the same device triggered duplicate check-in writes before the "
+                "first transaction completed. Resolved by implementing an idempotency key layer (device_id + "
+                "timestamp window) at the API boundary to deduplicate concurrent submissions and guarantee "
+                "exactly-once check-in semantics."
             ),
         },
     },
@@ -120,46 +84,83 @@ _PROJECTS = [
         },
     },
     {
-        "slug": "gym-membership-app",
-        "title": "Gym Membership Mobile App — Full-Stack Architecture",
-        "stack": ["Node.js", "PostgreSQL", "React Native", "REST APIs"],
+        "slug": "log-router",
+        "title": "Deterministic Intelligent Log Routing Agent",
+        "stack": ["Python", "re", "asyncio", "JSON Schema", "Linux I/O"],
         "states": [
             {
-                "label": "NFC/QR Hardware Integration",
+                "label": "Ingestion & Extraction",
                 "content": (
-                    "Architected a secure local hardware integration layer using NFC and QR-based check-in "
-                    "protocols — raw scan events piped through a validation middleware chain to automate user "
-                    "identity resolution and structured data logging, eliminating manual entry error."
+                    "High-throughput line-by-line buffered stream parsing raw, multi-line error traces "
+                    "through compiled regular expression matching lanes."
                 ),
             },
             {
-                "label": "Subscription Management & Data Pipeline",
+                "label": "Schema Validation Firewall",
                 "content": (
-                    "Developed centralized backend architecture managing high-volume enterprise member subscriptions "
-                    "with real-time status resolution — subscription state materialized from event streams and "
-                    "surfaced through a typed REST API consumed by the React Native client."
+                    "Match-groups are cast to JSON payloads and put through an isolated, decoupled JSON Schema "
+                    "verification layer to enforce strict data contracts."
                 ),
             },
             {
-                "label": "Analytics Dashboard & Reporting",
+                "label": "Priority Routing & Write",
                 "content": (
-                    "Built administrative reporting infrastructure to aggregate, process, and output real-time "
-                    "operational analytics — raw PostgreSQL query results transformed into structured report "
-                    "payloads with configurable date-range filtering and export-ready formatting."
+                    "Validated objects pass through an operational priority matrix and are written asynchronously "
+                    "using non-blocking file descriptors to isolated host directories (/logs/critical vs /logs/info)."
                 ),
             },
         ],
         "post_mortem": {
-            "title": "Resolving NFC Event Race Conditions Under Rapid Sequential Scans",
+            "title": "Overcoming Ingestion Stalls from Greedy Multi-Line RegEx Over-Consumption",
             "body": (
-                "Rapid successive NFC taps from the same device triggered duplicate check-in writes before the "
-                "first transaction completed. Resolved by implementing an idempotency key layer (device_id + "
-                "timestamp window) at the API boundary to deduplicate concurrent submissions and guarantee "
-                "exactly-once check-in semantics."
+                "Extended multi-line stack traces caused greedy dot-star (.*) patterns to breach valid log bounds, "
+                "pulling overlapping entries into single malformed objects and crashing the schema validator. "
+                "Resolved by refactoring the pipeline to non-greedy, anchoring expressions compiled with "
+                "re.MULTILINE and re.DOTALL flags to strictly enforce boundary integrity."
+            ),
+        },
+    },
+    {
+        "slug": "amharic-pipeline",
+        "title": "Low-Resource Amharic Text Classification Pipeline",
+        "stack": ["PyTorch", "NumPy", "Python Native"],
+        "states": [
+            {
+                "label": "Ingestion & Serialization",
+                "content": (
+                    "Custom syllable/character-level tokenizer mapping native Ge'ez scripts "
+                    "directly to dense, localized vocabulary coordinates — completely eliminating "
+                    "Western-biased tokenization bloat and Out-of-Vocabulary [UNK] flags."
+                ),
+            },
+            {
+                "label": "Geometric Transformation",
+                "content": (
+                    "LongTensor (B, max_seq_len) passes to nn.Embedding to yield a 3D FloatTensor "
+                    "(B, max_seq_len, 32). Sequence dimension mean-pooling compresses to uniform shape (B, 32)."
+                ),
+            },
+            {
+                "label": "Logit Projection & Loss",
+                "content": (
+                    "Linear layer projects hidden states into unnormalized logit arrays (B, 3), "
+                    "optimized via Cross-Entropy Loss optimization curves."
+                ),
+            },
+        ],
+        "post_mortem": {
+            "title": "Resolving PyTorch Memory Bloat via Dynamic Mini-Batch Collation",
+            "body": (
+                "In initial training runs, global padding caused severe tensor bloat by stretching all "
+                "variable-length sentences to a global maximum, saturating memory. Resolved by engineering "
+                "a custom dynamic collate function (collate_fn) inside the PyTorch DataLoader to dynamically "
+                "pad arrays to the maximum length only within that isolated mini-batch, reducing memory "
+                "overhead by 40% and stabilizing gradient updates."
             ),
         },
     },
 ]
+
 
 _PROJECT_INDEX = {p["slug"]: p for p in _PROJECTS}
 
