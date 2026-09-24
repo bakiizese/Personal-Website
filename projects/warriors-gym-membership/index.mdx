@@ -1,0 +1,52 @@
+---
+title: Warriors Gym membership system
+slug: warriors-gym-membership
+summary: One API and three apps for a real gym, covering members, plans, payments and QR check-in at the door.
+thumbnail: ./thumbnail.webp
+thumbnailAlt: The Warriors Gym landing page, with the headline “One gym. Three apps. One API.” next to phone mockups of the member and admin apps
+year: 2026
+role: Sole developer (API, admin panel, both mobile apps, hosting)
+stack: [Node.js, Express, Sequelize, PostgreSQL, React 19, Vite, Tailwind CSS, React Native, Expo, i18next, Docker, GitHub Actions]
+links:
+  live: https://warriors-gym.pages.dev
+  repo: https://github.com/bakiizese/Warriors-Gym-Membership
+problem: >-
+  A gym needed registration, membership plans, payments and attendance in one place, usable at the front
+  desk, on the gym floor, and from members’ own phones.
+outcome: >-
+  An Express and PostgreSQL API with 44 documented endpoints, a React admin panel, a staff app and a
+  member app. 99 tests run against a real PostgreSQL. It’s a public demo you can sign in to, with the data
+  reset every night.
+order: 2
+featured: false
+status: live
+screenshots:
+  - src: ./screens/apps.webp
+    alt: "“Pick a door”: cards for the admin web app, the admin mobile app and the member app, each with demo logins and an Open live button"
+    caption: Three apps, one shared backend. Each opens live in the browser with a demo login.
+  - src: ./screens/architecture.webp
+    alt: Architecture diagram showing the admin web, admin mobile and member mobile clients calling one Express API, which is the only thing that talks to PostgreSQL
+    caption: The API is the only thing that touches the database, so every rule lives in one place.
+  - src: ./screens/backend.webp
+    alt: "“More than screens”: panels describing the Express API and its endpoints, the 99 backend tests, the CI checks, the one-command Docker setup, offline support, demo mode and security"
+    caption: The parts you don’t see in the apps.
+  - src: ./screens/landing-mobile.webp
+    alt: The Warriors Gym landing page on a phone
+    caption: The landing page on a phone.
+---
+
+## One API, three clients
+
+Staff use a React admin panel at the desk and an Expo app on the gym floor for QR check-in and payments. The staff app keeps working when the connection drops. Members get their own app with workout videos, membership status, payments and attendance, in English, Amharic and Tigrinya. Both mobile apps also build for the browser, which is how the landing page shows them live.
+
+## Locked down by default
+
+Admin sign-up needs an invite code, tokens expire, password hashes are never returned by any query unless a password is being checked, and the auth routes have their own rate limit. Schema changes are reviewed migration files instead of `sync()`, and one test fails if the OpenAPI spec and the routes disagree.
+
+## Built to survive free hosting
+
+The API runs on Render’s free plan, the database on Neon, and the four front ends on Cloudflare Pages. A scheduled job keeps the API awake on a route that never touches the database, deploys wait until the new commit answers, and the demo data resets nightly. The demo logins are locked and payments are simulated, so anyone can poke at it safely.
+
+## What I’d do next
+
+Wire in real payments through Chapa (the client exists but isn’t connected), add Playwright tests for the three front ends, move uploads to object storage, add error reporting, and support more than one gym.

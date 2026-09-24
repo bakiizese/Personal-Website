@@ -1,22 +1,23 @@
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
+# Build output
+dist/
+.astro/
 
-# Virtual environment
+# Dependencies
+node_modules/
+
+# Python venv used only by scripts/cutout.py
 .venv/
-venv/
-env/
 
-# Flask / runtime
-instance/
-logs/
-*.log
+# Playwright screenshots (regenerate with `npm run shots`)
+screenshots/
 
 # Environment variables
 .env
 .env.*
+
+# Logs
+*.log
+npm-debug.log*
 
 # OS
 .DS_Store

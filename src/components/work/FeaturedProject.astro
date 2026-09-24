@@ -1,0 +1,145 @@
+---
+/** The one project marked `featured: true`, shown as a wide editorial spread at the top of Selected Work. */
+import { Image } from 'astro:assets';
+import type { Project } from '../../lib/projects';
+import { statusLabel } from '../../lib/projects';
+import StackList from '../StackList.astro';
+
+interface Props {
+  project: Project;
+  number: number;
+}
+
+const { project, number } = Astro.props;
+const { data } = project;
+const href = `/work/${project.id}/`;
+const no = String(number).padStart(2, '0');
+---
+
+<article class="featured" aria-labelledby={`p-${project.id}`}>
+  <a class="shot" href={href} tabindex="-1" aria-hidden="true">
+    <Image
+      src={data.thumbnail}
+      alt=""
+      widths={[640, 960, 1280, 1600]}
+      sizes="(min-width: 64rem) 62vw, 100vw"
+    />
+  </a>
+
+  <div class="body">
+    <p class="label muted meta">
+      <span class="no">No. {no}</span>
+      <span>{data.year}</span>
+      <span>{statusLabel[data.status]}</span>
+    </p>
+    <h3 class="display title" id={`p-${project.id}`}>
+      <a href={href}>{data.title}</a>
+    </h3>
+    <p class="summary">{data.summary}</p>
+    <dl class="glance">
+      <div>
+        <dt class="label muted">Problem</dt>
+        <dd>{data.problem}</dd>
+      </div>
+    </dl>
+    <StackList items={data.stack} limit={6} />
+    <a class="more" href={href}>Read how it works <span aria-hidden="true">→</span></a>
+  </div>
+</article>
+
+<style>
+  .featured {
+    display: grid;
+    gap: var(--space-l) var(--col-gap);
+  }
+
+  @media (min-width: 64rem) {
+    .featured {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      align-items: end;
+    }
+
+    .shot {
+      grid-column: 1 / span 8;
+    }
+
+    .body {
+      grid-column: 9 / span 4;
+    }
+  }
+
+  .shot {
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border: 1px solid var(--ink);
+    background: var(--surface);
+  }
+
+  .shot :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur-slow) var(--ease-out);
+  }
+
+  .featured:hover .shot :global(img) {
+    transform: scale(1.015);
+  }
+
+  .body {
+    display: grid;
+    gap: var(--space-s);
+    justify-items: start;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-m);
+  }
+
+  .no {
+    color: var(--accent-text);
+  }
+
+  .title {
+    font-size: var(--step-4);
+  }
+
+  .title a {
+    text-decoration: none;
+  }
+
+  .title a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 2px;
+  }
+
+  .summary {
+    font-size: var(--step-1);
+    line-height: 1.4;
+  }
+
+  .glance dd {
+    color: var(--muted);
+    font-size: var(--step--1);
+    margin-top: var(--space-3xs);
+  }
+
+  .more {
+    font-weight: 500;
+    margin-top: var(--space-2xs);
+  }
+
+  .more span {
+    display: inline-block;
+    transition: transform var(--dur-med) var(--ease-out);
+  }
+
+  .more:hover span {
+    transform: translateX(3px);
+  }
+</style>

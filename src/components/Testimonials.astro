@@ -1,0 +1,91 @@
+---
+/** Testimonials. Only real ones with permission; with none in site.ts a marked placeholder shows instead. */
+import { sectionNumber } from '../lib/sections';
+import { site, type Testimonial } from '../config/site';
+import SectionHeader from './SectionHeader.astro';
+import Placeholder from './Placeholder.astro';
+
+const items: Testimonial[] = site.testimonials;
+---
+
+<section class="testimonials" aria-labelledby="testimonials-heading">
+  <div class="wrap">
+    <SectionHeader number={sectionNumber('testimonials')} label="What people say" id="testimonials-heading" />
+
+    {
+      items.length === 0 ? (
+        <div class="empty">
+          <Placeholder what="Testimonials" block>
+            Only real quotes from clients or colleagues, with their permission. Add them to{' '}
+            <code>testimonials</code> in src/config/site.ts and this block is replaced.
+          </Placeholder>
+        </div>
+      ) : (
+        <ul class="quotes" role="list">
+          {items.map((t) => (
+            <li>
+              <figure>
+                <blockquote class="display">
+                  <p>“{t.quote}”</p>
+                </blockquote>
+                <figcaption class="label">
+                  <span>{t.name}</span>
+                  <span class="muted">{t.title}</span>
+                  {t.url && (
+                    <a href={t.url} target="_blank" rel="noopener">
+                      Source <span aria-hidden="true">↗</span>
+                    </a>
+                  )}
+                </figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .testimonials {
+    padding-top: var(--space-2xl);
+  }
+
+  .empty {
+    margin-top: var(--space-l);
+    max-width: 40rem;
+  }
+
+  .quotes {
+    display: grid;
+    gap: var(--space-xl) var(--col-gap);
+    margin-top: var(--space-l);
+  }
+
+  @media (min-width: 64rem) {
+    .quotes {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .quotes li:only-child {
+      grid-column: 1 / -1;
+      max-width: 48rem;
+    }
+  }
+
+  figure {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  blockquote {
+    font-size: var(--step-3);
+    line-height: 1.12;
+  }
+
+  figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-s);
+  }
+</style>

@@ -1,0 +1,79 @@
+---
+# ─────────────────────────────────────────────────────────────────────────────
+# PROJECT TEMPLATE
+# 1. Copy this whole folder:   cp -r projects/_template projects/my-project
+# 2. Put a thumbnail in the new folder (thumbnail.png, .jpg or .webp; 16:10 works best).
+#    No image yet? Run:  npm run thumbs -- my-project   (makes a typographic placeholder)
+# 3. Fill in every field below, then write the Approach section under the second ---.
+# 4. Run `npm run build`. If anything is missing or wrong, the build stops and tells you which field.
+# Folders starting with "_" (like this one) are never published.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# The project name, as it should appear on the site.
+title: My project
+
+# URL name: lowercase, numbers, hyphens. MUST match the folder name.
+# This folder → /work/my-project
+slug: my-project
+
+# One line, 160 characters max. Shown in the project list.
+# Say what it is and who it's for, not how great it is.
+summary: A booking tool that lets a clinic’s front desk see and change the day’s appointments in one screen.
+
+# Path to the thumbnail, relative to this file. The build fails if the file doesn't exist.
+thumbnail: ./thumbnail.png
+# Describe the image for people using screen readers.
+thumbnailAlt: The appointments screen, showing a day view with six bookings
+
+# A year (2026) or a range in quotes ("2024–26").
+year: 2026
+
+# What you did. Be specific: "Sole developer", "Frontend lead, team of 4", "Backend and deployment".
+role: Sole developer
+
+# Tools you actually used. Shown as tags. Most important first.
+stack: [TypeScript, React, Node.js, PostgreSQL]
+
+# All optional. Delete the lines you don't have. Must be full URLs.
+links:
+  live: https://example.com
+  repo: https://github.com/bakiizese/my-project
+  # caseStudy: https://…   (a write-up hosted somewhere else)
+  # docs: https://…        (API docs, Swagger, etc.)
+
+# 1–3 sentences each. These are the "10-second scan" at the top of the project page.
+problem: What was broken, slow or missing, and for whom.
+outcome: What changed because of your work. Only results you can back up. No invented numbers.
+
+# Lower numbers come first on the home page. Must be unique across all projects.
+# Leave gaps (10, 20, 30) so you can slot new ones in between.
+order: 50
+
+# true = shown large at the top of the Selected Work section. Keep it to one project.
+featured: false
+
+# One of: live, in-progress, complete, archived, placeholder
+status: complete
+
+# Optional extra images for the project page, relative to this file.
+# Delete the whole block if you have none.
+# screenshots:
+#   - src: ./screens/dashboard.png
+#     alt: The admin dashboard with the week’s bookings
+#     caption: The admin dashboard.
+---
+
+{/* Everything below the second --- is the long read on the project page (the "Approach").
+    Use ## headings for sections. Plain first person. Normal Markdown works. */}
+
+## How it works
+
+Explain the idea in a paragraph.
+
+## The hard part
+
+What was difficult, what you tried, and what you chose in the end.
+
+## What I’d do next
+
+Honest next steps.

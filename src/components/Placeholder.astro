@@ -1,0 +1,60 @@
+---
+/**
+ * Visible marker for content not provided yet. Never ship invented content in its place.
+ *   <Placeholder what="Upwork profile URL" />                 inline
+ *   <Placeholder what="Testimonials" block>Add them in src/config/site.ts</Placeholder>
+ */
+interface Props {
+  what: string;
+  block?: boolean;
+}
+
+const { what, block = false } = Astro.props;
+const Tag = block ? 'div' : 'span';
+---
+
+<Tag class:list={['placeholder', { 'placeholder--block': block }]}>
+  <span class="tag">[PLACEHOLDER]</span>
+  <span class="what">{what}</span>
+  {block && Astro.slots.has('default') && <p class="hint"><slot /></p>}
+</Tag>
+
+<style>
+  .placeholder {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 0.6em;
+    padding: 0.1em 0.5em;
+    font-family: var(--mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.02em;
+    color: var(--muted);
+    border: 1px dashed var(--accent);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  .tag {
+    color: var(--accent-text);
+    letter-spacing: var(--tracking-label);
+  }
+
+  .placeholder--block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    padding: var(--space-m);
+  }
+
+  .placeholder--block .what {
+    font-size: var(--step--1);
+    color: var(--ink);
+  }
+
+  .hint {
+    font-family: var(--sans);
+    font-size: var(--step--1);
+    letter-spacing: 0;
+  }
+</style>

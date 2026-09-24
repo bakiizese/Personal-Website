@@ -1,4 +1,0 @@
-Flask==3.0.3
-flask-cors==4.0.1
-jsonschema[format-nongpl]==4.10.3
-Werkzeug==3.0.3

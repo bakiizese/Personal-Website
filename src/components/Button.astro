@@ -1,0 +1,74 @@
+---
+/**
+ * primary: the one filled call to action per view (accent-text fill, 5.4:1 with white).
+ * text:    an underlined link with a trailing arrow. Used for every secondary action.
+ */
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'a'> {
+  href: string;
+  variant?: 'primary' | 'text';
+  arrow?: '→' | '↓' | '↗' | null;
+}
+
+const { href, variant = 'primary', arrow = '→', class: className, ...rest } = Astro.props;
+const external = /^https?:/.test(href);
+const direction = { '→': 'right', '↓': 'down', '↗': 'out' } as const;
+---
+
+<a
+  href={href}
+  class:list={['btn', `btn--${variant}`, className]}
+  {...(external ? { rel: 'noopener', target: '_blank' } : {})}
+  {...rest}
+>
+  <span><slot /></span>
+  {arrow && <span class="arrow" data-dir={direction[arrow]} aria-hidden="true">{arrow}</span>}
+  {external && <span class="visually-hidden">(opens in a new tab)</span>}
+</a>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .btn--primary {
+    padding: 0.95em 1.35em;
+    background: var(--accent-text);
+    color: var(--on-accent);
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: background-color var(--dur-fast) ease;
+  }
+
+  .btn--primary:hover {
+    color: var(--on-accent);
+    background: var(--ink);
+  }
+
+  .btn--text {
+    padding-block: 0.95em;
+  }
+
+  .arrow {
+    display: inline-block;
+    transition: transform var(--dur-med) var(--ease-out);
+  }
+
+  .btn:hover .arrow[data-dir='right'] {
+    transform: translateX(3px);
+  }
+
+  .btn:hover .arrow[data-dir='down'] {
+    transform: translateY(3px);
+  }
+
+  .btn:hover .arrow[data-dir='out'] {
+    transform: translate(2px, -2px);
+  }
+</style>

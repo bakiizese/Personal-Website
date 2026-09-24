@@ -1,0 +1,32 @@
+---
+/** Stack tags as plain mono text separated by thin slashes. Not chips. */
+interface Props {
+  items: readonly string[];
+  limit?: number;
+  label?: string;
+}
+
+const { items, limit, label = 'Stack' } = Astro.props;
+const shown = limit ? items.slice(0, limit) : items;
+const hidden = limit ? items.length - shown.length : 0;
+---
+
+<ul class="stack label" role="list" aria-label={label}>
+  {shown.map((item) => <li>{item}</li>)}
+  {hidden > 0 && <li class="more">+{hidden}</li>}
+</ul>
+
+<style>
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.15em 0;
+    color: var(--muted);
+  }
+
+  li:not(:last-child)::after {
+    content: '/';
+    margin-inline: 0.7em;
+    color: var(--line-strong);
+  }
+</style>

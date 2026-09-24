@@ -1,0 +1,45 @@
+---
+title: Wego Ride
+slug: wego-ride
+summary: Backend for a scheduled shuttle service, where riders book seats on planned trips, with live ride status and Chapa payments.
+thumbnail: ./thumbnail.webp
+thumbnailAlt: "The Wego Ride landing page: “The engine behind scheduled ride-sharing”, above a route map with live trip, WebSocket and payment status cards"
+year: "2024–26"
+role: Sole developer (started as an ALX project)
+stack: [Python, Flask, SQLAlchemy, Alembic, MySQL, Redis, Flask-SocketIO, JWT, Chapa, Resend, pytest, Docker, GitHub Actions]
+links:
+  live: https://wego-ride-backend.bereketzeselassie.workers.dev/
+  docs: https://wego-ride-backend.onrender.com/apidocs/
+  repo: https://github.com/bakiizese/Wego_ride_backend
+problem: >-
+  It started as a bootcamp project. Before putting it online I reviewed it the way an attacker would and
+  found real holes. A case-sensitivity bug let any admin delete a superadmin, payments trusted the amount
+  the client sent, and one admin check skipped the logout blacklist.
+outcome: >-
+  All three are fixed, with a regression test for the admin escalation. The API has 84 endpoints documented
+  in OpenAPI and is live on free hosting. You can take a trip from an empty database to paid and rated
+  entirely from Swagger.
+order: 3
+featured: false
+status: live
+---
+
+## How it works
+
+An admin schedules trips, riders book seats on them, and drivers run the route. There are three roles, each with its own JWT-protected endpoints. Riders and drivers rate each other once a trip is completed, and the averages are updated in the same transaction as the rating.
+
+## Payments behind an interface
+
+`PaymentGateway` is a small abstract class, and Chapa is one implementation of it. The server computes the charge from the trip fare. The payment stays pending until Chapa’s webhook arrives, the webhook signature is checked, and the transaction is verified with Chapa again before anything is marked paid. Adding another provider means writing one class and changing an environment variable.
+
+## Live ride status
+
+Flask-SocketIO serves a `/rides` namespace with one room per trip. Joining a room checks that you’re the rider who booked it, the assigned driver, or an admin. Starts, ends, cancellations and payments are pushed to the room through a Redis message queue, so it works across more than one app instance. The old polling endpoints still work as a fallback.
+
+## Logout that actually logs you out
+
+Tokens are checked against a Redis blacklist, so logging out invalidates them. Login returns the same error whether the account or the password is wrong. Login, registration and password reset are rate limited, and reset codes go out by email through Resend instead of being returned in the response.
+
+## CI against real services
+
+Every push runs ruff, then the pytest suite against real MySQL and Redis containers, including the WebSocket flow over a real websocket transport, then a Docker build. Render deploys `main` automatically.

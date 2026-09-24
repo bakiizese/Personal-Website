@@ -1,0 +1,286 @@
+---
+/**
+ * Intro video, configured by `site.video` in src/config/site.ts.
+ * Nothing third-party loads until the visitor clicks play: the poster is local, and YouTube
+ * (privacy-enhanced domain) or Vimeo (do-not-track) are only injected on click.
+ * A self-hosted file gets native controls and a captions track.
+ */
+import { sectionNumber } from '../lib/sections';
+import { site } from '../config/site';
+import SectionHeader from './SectionHeader.astro';
+import Placeholder from './Placeholder.astro';
+
+const video = site.video;
+const hasVideo = video.provider !== null;
+const duration = hasVideo ? video.duration : null;
+
+let embed: string | null = null;
+if (video.provider === 'youtube') {
+  embed = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(video.id)}?autoplay=1&rel=0&modestbranding=1&cc_load_policy=1`;
+} else if (video.provider === 'vimeo') {
+  embed = `https://player.vimeo.com/video/${encodeURIComponent(video.id)}?autoplay=1&dnt=1&texttrack=en`;
+}
+---
+
+<section class="intro-video" aria-labelledby="intro-heading">
+  <div class="wrap">
+    <SectionHeader number={sectionNumber('intro')} label="Intro" id="intro-heading" aside={duration ? `${duration}` : 'Video'} />
+
+    <div class="layout">
+      <figure class="frame-wrap">
+        <div class:list={['frame', { 'frame--empty': !hasVideo }]}>
+          {
+            !hasVideo && (
+              <div class="empty">
+                <span class="play play--idle" aria-hidden="true" />
+                <Placeholder what="Intro video">
+                  Set <code>video</code> in src/config/site.ts to a YouTube or Vimeo ID, or a file in /public.
+                </Placeholder>
+              </div>
+            )
+          }
+          {
+            hasVideo && (
+              <button
+                class="poster"
+                type="button"
+                data-video-play
+                data-embed={embed ?? undefined}
+                data-src={video.provider === 'file' ? video.src : undefined}
+                data-captions={video.provider === 'file' ? video.captions : undefined}
+                data-title={video.title}
+                aria-label={`Play video: ${video.title}${duration ? `, ${duration}` : ''}`}
+              >
+                {video.poster ? (
+                  <img src={video.poster} alt="" loading="lazy" decoding="async" />
+                ) : (
+                  <span class="poster-type display" aria-hidden="true">
+                    Hello, I’m <em>{site.firstName}</em>.
+                  </span>
+                )}
+                <span class="play" aria-hidden="true" />
+              </button>
+            )
+          }
+        </div>
+        <figcaption class="label muted">
+          <span>Intro{duration ? `, ${duration}` : ''}</span>
+          {hasVideo && video.provider !== 'file' && <span>Plays from {video.provider === 'youtube' ? 'YouTube' : 'Vimeo'} on click</span>}
+        </figcaption>
+      </figure>
+
+      <div class="note">
+        <h2 class="display note-title">A short <em>hello</em>.</h2>
+        <p class="muted">{site.videoNote}</p>
+        {
+          hasVideo && video.transcript && (
+            <details class="transcript">
+              <summary class="label">Read the transcript</summary>
+              <div class="transcript-body">
+                {video.transcript.split(/\n{2,}/).map((para) => (
+                  <p>{para}</p>
+                ))}
+              </div>
+            </details>
+          )
+        }
+        {!hasVideo && <p><Placeholder what="Transcript" /></p>}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-video-play]').forEach((button) => {
+    button.addEventListener(
+      'click',
+      () => {
+        const { embed, src, captions, title } = button.dataset;
+        const frame = button.parentElement!;
+        let player: HTMLElement;
+
+        if (embed) {
+          const iframe = document.createElement('iframe');
+          iframe.src = embed;
+          iframe.title = title ?? 'Intro video';
+          iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+          iframe.allowFullscreen = true;
+          player = iframe;
+        } else {
+          const video = document.createElement('video');
+          video.src = src!;
+          video.controls = true;
+          video.autoplay = true;
+          video.playsInline = true;
+          video.setAttribute('aria-label', title ?? 'Intro video');
+          if (captions) {
+            const track = document.createElement('track');
+            Object.assign(track, { kind: 'captions', src: captions, srclang: 'en', label: 'English', default: true });
+            video.append(track);
+          }
+          player = video;
+        }
+
+        player.className = 'player';
+        button.replaceWith(player);
+        player.focus();
+        frame.dataset.playing = '';
+      },
+      { once: true },
+    );
+  });
+</script>
+
+<style>
+  .intro-video {
+    padding-top: var(--space-2xl);
+  }
+
+  .layout {
+    display: grid;
+    gap: var(--space-l) var(--col-gap);
+    margin-top: var(--space-l);
+  }
+
+  @media (min-width: 64rem) {
+    .layout {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      align-items: end;
+    }
+
+    .frame-wrap {
+      grid-column: 1 / span 8;
+    }
+
+    .note {
+      grid-column: 10 / span 3;
+      padding-bottom: 2.4rem; /* line up with the frame, above its caption */
+    }
+  }
+
+  .frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--ink);
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  /* Shorter while there's no video, so an empty box doesn't take up a screen of height. */
+  .frame--empty {
+    aspect-ratio: 21 / 9;
+  }
+
+  .frame > :global(.player),
+  .poster {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .frame > :global(video.player) {
+    background: #000;
+  }
+
+  .poster {
+    display: block;
+    text-align: left;
+  }
+
+  .poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .poster-type {
+    position: absolute;
+    left: var(--space-l);
+    bottom: var(--space-l);
+    font-size: var(--step-4);
+  }
+
+  /* Custom play control: a square with a triangle, bottom-right, accent on hover. */
+  .play {
+    position: absolute;
+    right: var(--space-m);
+    bottom: var(--space-m);
+    width: clamp(3.25rem, 2.5rem + 3vw, 5rem);
+    aspect-ratio: 1;
+    background: var(--ink);
+    border-radius: var(--radius);
+    transition: background-color var(--dur-fast) ease;
+  }
+
+  .play::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 0;
+    height: 0;
+    border-block: 0.6em solid transparent;
+    border-left: 1em solid var(--paper);
+    transform: translateX(12%);
+    font-size: clamp(0.9rem, 0.7rem + 0.8vw, 1.4rem);
+  }
+
+  .poster:hover .play,
+  .poster:focus-visible .play {
+    background: var(--accent-text);
+  }
+
+  .poster:focus-visible {
+    outline-offset: -4px;
+  }
+
+  .empty {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    padding: var(--space-m);
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 12.5% 22.222%;
+    background-position: -1px -1px;
+  }
+
+  .play--idle {
+    background: var(--line-strong);
+  }
+
+  figcaption {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-s);
+    padding-top: var(--space-2xs);
+  }
+
+  .note {
+    display: grid;
+    gap: var(--space-s);
+    align-content: end;
+  }
+
+  .note-title {
+    font-size: var(--step-4);
+  }
+
+  .transcript summary {
+    cursor: pointer;
+    color: var(--accent-text);
+  }
+
+  .transcript-body {
+    display: grid;
+    gap: 0.8em;
+    margin-top: var(--space-s);
+    max-height: 22rem;
+    overflow: auto;
+    padding-right: var(--space-2xs);
+    font-size: var(--step--1);
+  }
+</style>

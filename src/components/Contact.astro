@@ -1,0 +1,184 @@
+---
+/**
+ * Contact: the email address set large (a plain mailto link, with a copy button for people
+ * whose mail client doesn't open), plus availability, profiles and the résumé.
+ * No form: a static site has nowhere to send one. Add one only if it's wired to a real service.
+ */
+import { sectionNumber } from '../lib/sections';
+import { site } from '../config/site';
+import { emphasis } from '../lib/text';
+import SectionHeader from './SectionHeader.astro';
+import Availability from './Availability.astro';
+import Placeholder from './Placeholder.astro';
+---
+
+<section id="contact" class="contact" aria-labelledby="contact-heading">
+  <div class="wrap">
+    <SectionHeader number={sectionNumber('contact')} label="Contact" id="contact-heading" aside={`${site.timezone.offset} · ${site.timezone.label}`} />
+
+    <h2 class="display heading" set:html={emphasis(site.contact.heading)} />
+
+    <div class="layout">
+      <div class="email-block">
+        <p class="label muted">Email</p>
+        <a class="email" href={`mailto:${site.email}`}>{site.email}</a>
+        <button class="copy label" type="button" data-copy={site.email}>
+          <span data-copy-label>Copy address</span>
+        </button>
+        <p class="note muted">{site.contact.note}</p>
+      </div>
+
+      <dl class="facts">
+        <div>
+          <dt class="label muted">Availability</dt>
+          <dd><Availability /></dd>
+        </div>
+        <div>
+          <dt class="label muted">Based in</dt>
+          <dd>{site.location}, {site.timezone.offset}</dd>
+        </div>
+        <div>
+          <dt class="label muted">Elsewhere</dt>
+          <dd>
+            <ul class="links" role="list">
+              {
+                site.links.filter((link) => link.href || site.showPlaceholders).map((link) => (
+                  <li>
+                    {link.href ? (
+                      <a href={link.href} target="_blank" rel="me noopener">
+                        {link.label} <span aria-hidden="true">↗</span>
+                        <span class="visually-hidden">(opens in a new tab)</span>
+                      </a>
+                    ) : (
+                      <Placeholder what={`${link.label} URL`} />
+                    )}
+                  </li>
+                ))
+              }
+            </ul>
+          </dd>
+        </div>
+        {(site.resume || site.showPlaceholders) && (
+        <div>
+          <dt class="label muted">Résumé</dt>
+          <dd>
+            {
+              site.resume ? (
+                <a href={site.resume} download>
+                  Download PDF <span aria-hidden="true">↓</span>
+                </a>
+              ) : (
+                <Placeholder what="Résumé PDF" />
+              )
+            }
+          </dd>
+        </div>
+        )}
+      </dl>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((button) => {
+    const label = button.querySelector<HTMLElement>('[data-copy-label]')!;
+    const original = label.textContent;
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.copy!);
+        label.textContent = 'Copied';
+      } catch {
+        label.textContent = 'Press Ctrl+C to copy';
+        getSelection()?.selectAllChildren(button.previousElementSibling!);
+      }
+      setTimeout(() => (label.textContent = original), 2400);
+    });
+  });
+</script>
+
+<style>
+  .contact {
+    padding-top: var(--space-2xl);
+  }
+
+  .heading {
+    font-size: var(--step-5);
+    margin-block: var(--space-m) var(--space-l);
+  }
+
+  .layout {
+    display: grid;
+    gap: var(--space-xl) var(--col-gap);
+  }
+
+  @media (min-width: 64rem) {
+    .layout {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      align-items: start;
+    }
+
+    .email-block {
+      grid-column: 1 / span 7;
+    }
+
+    .facts {
+      grid-column: 9 / span 4;
+    }
+  }
+
+  .email-block {
+    display: grid;
+    gap: var(--space-xs);
+    justify-items: start;
+  }
+
+  .email {
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 0.9rem + 3.2vw, 3.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    overflow-wrap: anywhere;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.14em;
+  }
+
+  .email:hover {
+    text-decoration-thickness: 3px;
+  }
+
+  /* role="status" would announce every change; the text swap on a focused button is read out anyway. */
+  .copy {
+    padding: 0.55em 0.9em;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    transition:
+      border-color var(--dur-fast) ease,
+      color var(--dur-fast) ease;
+  }
+
+  .copy:hover {
+    border-color: var(--ink);
+  }
+
+  .note {
+    max-width: 44ch;
+    margin-top: var(--space-s);
+  }
+
+  .facts > div {
+    display: grid;
+    gap: var(--space-3xs);
+    padding-block: var(--space-s);
+    border-top: var(--rule);
+  }
+
+  .facts > div:last-child {
+    border-bottom: var(--rule);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3em var(--space-m);
+  }
+</style>

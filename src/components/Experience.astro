@@ -1,0 +1,109 @@
+---
+/** Experience as a ruled timeline. With no entries in site.ts, two marked placeholder rows show the layout. */
+import { sectionNumber } from '../lib/sections';
+import { site, type ExperienceItem } from '../config/site';
+import SectionHeader from './SectionHeader.astro';
+import Placeholder from './Placeholder.astro';
+
+const items: ExperienceItem[] = site.experience;
+const empty = items.length === 0;
+
+const month = new Intl.DateTimeFormat('en', { month: 'short', year: 'numeric' });
+function when(value: string | null): string {
+  if (value === null) return 'Now';
+  return /^\d{4}-\d{2}$/.test(value) ? month.format(new Date(`${value}-01T00:00:00`)) : value;
+}
+---
+
+<section id="experience" class="experience" aria-labelledby="experience-heading">
+  <div class="wrap">
+    <SectionHeader number={sectionNumber('experience')} label="Experience" id="experience-heading" />
+
+    <ol class="timeline" role="list">
+      {
+        empty
+          ? [1, 2].map(() => (
+              <li class="row">
+                <p class="dates label">
+                  <Placeholder what="Start – End" />
+                </p>
+                <div class="what">
+                  <Placeholder what="Role, Organisation" />
+                </div>
+                <p class="summary muted">
+                  <Placeholder what="One line on what you did there" />
+                </p>
+              </li>
+            ))
+          : items.map((item) => (
+              <li class="row">
+                <p class="dates label muted">
+                  <time>{when(item.start)}</time> – {item.end ? <time>{when(item.end)}</time> : 'Now'}
+                </p>
+                <div class="what">
+                  <h3 class="role">{item.role}</h3>
+                  <p class="org">{item.orgUrl ? <a href={item.orgUrl}>{item.org}</a> : item.org}</p>
+                </div>
+                <p class="summary muted">{item.summary}</p>
+              </li>
+            ))
+      }
+    </ol>
+    {empty && <p class="hint label muted">Add entries to <code>experience</code> in src/config/site.ts</p>}
+  </div>
+</section>
+
+<style>
+  .experience {
+    padding-top: var(--space-2xl);
+  }
+
+  .timeline {
+    margin-top: var(--space-l);
+  }
+
+  .row {
+    display: grid;
+    gap: var(--space-2xs) var(--col-gap);
+    padding-block: var(--space-m);
+    border-bottom: var(--rule);
+  }
+
+  @media (min-width: 64rem) {
+    .row {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      align-items: baseline;
+    }
+
+    .dates {
+      grid-column: 1 / span 3;
+    }
+
+    .what {
+      grid-column: 4 / span 4;
+    }
+
+    .summary {
+      grid-column: 8 / span 5;
+    }
+  }
+
+  .role {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: var(--step-2);
+    line-height: 1.15;
+  }
+
+  .org {
+    font-size: var(--step--1);
+  }
+
+  .summary {
+    font-size: var(--step--1);
+  }
+
+  .hint {
+    padding-top: var(--space-s);
+  }
+</style>

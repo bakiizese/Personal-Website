@@ -1,0 +1,35 @@
+---
+title: Intelligent log routing agent
+slug: intelligent-log-routing-agent
+summary: A Python pipeline that parses raw logs, has an LLM rank each one by urgency, and falls back to rules when the model is unavailable.
+thumbnail: ./thumbnail.png
+thumbnailAlt: A typographic cover with the project title and its stack
+year: 2026
+role: Sole developer
+stack: [Python, Regular expressions, Gemini API, JSON]
+links:
+  repo: https://github.com/bakiizese/intelligent-log-routing-agent
+problem: >-
+  Logs usually get dumped in one place for someone to sort through later. I wanted each entry parsed,
+  given a reasoned priority, and filed where the right person would look, without the pipeline breaking
+  when the model is down.
+outcome: >-
+  A small pipeline with two dependencies. It extracts fields with plain regex, has Gemini classify each
+  entry against a fixed set of priorities, and falls back to deterministic rules, so every log that goes in
+  comes out. It runs fully without an API key.
+order: 4
+featured: false
+status: complete
+---
+
+## Parse with plain regex
+
+Each line is split into timestamp, level, component and message with named-group patterns. A second pass looks for an IP address, username, error code, endpoint, node ID, HTTP status and duration. A field is either found in the line or left empty. Nothing is guessed.
+
+## Treat the model as unreliable
+
+The parsed entry goes to Gemini with a prompt that asks for JSON: a priority, a confidence score, the reasoning, and troubleshooting steps. The response is only accepted if it has every required key and the priority is one of three allowed values. If the call fails, times out or returns anything else, a rule-based classifier decides instead, using the log level and security keywords. Every record notes which one made the call.
+
+## Every log comes out
+
+Each record gets an ID and is written as JSON to `IMMEDIATE_ACTION`, `DEFERRED_REVIEW` or `ARCHIVE`. The code is split by job (generate, parse, classify, write), with one public function per module, so each piece can be tested or swapped on its own.

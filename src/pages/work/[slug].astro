@@ -1,0 +1,441 @@
+---
+/**
+ * Project page. Top half is the 10-second scan (title, summary, meta, problem, outcome);
+ * the bottom half is the 2-minute read (the MDX Approach, screenshots, links).
+ */
+import type { GetStaticPaths } from 'astro';
+import { Image, getImage } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import StackList from '../../components/StackList.astro';
+import Placeholder from '../../components/Placeholder.astro';
+import { getProjects, statusLabel, type Project } from '../../lib/projects';
+import '../../styles/prose.css';
+
+export const getStaticPaths = (async () => {
+  const projects = await getProjects();
+  return projects.map((project, i) => ({
+    params: { slug: project.id },
+    props: { project, number: i + 1, total: projects.length, prev: projects[i - 1], next: projects[i + 1] },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  project: Project;
+  number: number;
+  total: number;
+  prev?: Project;
+  next?: Project;
+}
+
+const { project, number, total, prev, next } = Astro.props;
+const { data } = project;
+const { Content, headings } = await render(project);
+const toc = headings.filter((h) => h.depth === 2);
+const pad = (n: number) => String(n).padStart(2, '0');
+
+// Share image: the project's own thumbnail, cropped to the 1200×630 link-preview size.
+const og = await getImage({ src: data.thumbnail, width: 1200, height: 630, fit: 'cover', format: 'jpeg', quality: 82 });
+
+const links = [
+  data.links.live && { label: 'Live site', href: data.links.live },
+  data.links.docs && { label: 'API docs', href: data.links.docs },
+  data.links.repo && { label: 'Source code', href: data.links.repo },
+  data.links.caseStudy && { label: 'Case study', href: data.links.caseStudy },
+].filter(Boolean) as { label: string; href: string }[];
+---
+
+<Base title={data.title} description={data.summary} image={og.src} imageAlt={data.thumbnailAlt} type="article" noindex={data.status === 'placeholder'}>
+  <article class="project">
+    <div class="wrap">
+      <nav class="crumbs label" aria-label="Breadcrumb">
+        <a href="/#work"><span aria-hidden="true">←</span> All work</a>
+        <span class="muted">No. {pad(number)} / {pad(total)}</span>
+      </nav>
+
+      <header class="head">
+        <h1 class="display title">{data.title}</h1>
+        <p class="summary">{data.summary}</p>
+      </header>
+
+      <dl class="meta">
+        <div>
+          <dt class="label muted">Year</dt>
+          <dd>{data.year}</dd>
+        </div>
+        <div>
+          <dt class="label muted">Role</dt>
+          <dd>{data.role}</dd>
+        </div>
+        <div>
+          <dt class="label muted">Status</dt>
+          <dd class:list={{ flag: data.status === 'placeholder' }}>{statusLabel[data.status]}</dd>
+        </div>
+        <div>
+          <dt class="label muted">Links</dt>
+          <dd class="links">
+            {
+              links.length ? (
+                links.map((l) => (
+                  <a href={l.href} target="_blank" rel="noopener">
+                    {l.label} <span aria-hidden="true">↗</span>
+                    <span class="visually-hidden">(opens in a new tab)</span>
+                  </a>
+                ))
+              ) : data.status === 'placeholder' ? (
+                <Placeholder what="Links" />
+              ) : (
+                <span class="muted">Private</span>
+              )
+            }
+          </dd>
+        </div>
+        <div class="meta-stack">
+          <dt class="label muted">Stack</dt>
+          <dd><StackList items={data.stack} /></dd>
+        </div>
+      </dl>
+
+
+      <section class="glance" aria-label="At a glance">
+        <div>
+          <h2 class="label"><span class="n">A</span> The problem</h2>
+          <p>{data.problem}</p>
+        </div>
+        <div>
+          <h2 class="label"><span class="n">B</span> The outcome</h2>
+          <p>{data.outcome}</p>
+        </div>
+      </section>
+
+      <figure class="cover">
+        <Image
+          src={data.thumbnail}
+          alt={data.thumbnailAlt}
+          widths={[640, 960, 1280, 1600, 2000]}
+          sizes="(min-width: 90rem) 84rem, 100vw"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </figure>
+
+      <section class="approach" aria-labelledby="approach-heading">
+        <SectionHeader number="C" label="Approach" id="approach-heading" />
+        <div class="approach-grid">
+          {
+            toc.length > 1 && (
+              <nav class="toc" aria-label="On this page">
+                <ol role="list">
+                  {toc.map((h) => (
+                    <li>
+                      <a href={`#${h.slug}`}>{h.text}</a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            )
+          }
+          <div class="prose">
+            <Content />
+          </div>
+        </div>
+      </section>
+
+      {
+        data.screenshots.length > 0 && (
+          <section class="shots" aria-labelledby="shots-heading">
+            <SectionHeader number="D" label="Screens" id="shots-heading" />
+            <div class="shot-grid">
+              {data.screenshots.map((s) => (
+                <figure>
+                  <Image src={s.src} alt={s.alt} widths={[640, 1000, 1400, 2000]} sizes="(min-width: 90rem) 70rem, (min-width: 64rem) 78vw, 100vw" />
+                  {s.caption && <figcaption class="label muted">{s.caption}</figcaption>}
+                </figure>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <nav class="pager" aria-label="More projects">
+        {
+          prev ? (
+            <a class="prev" href={`/work/${prev.id}/`}>
+              <span class="label muted">
+                <span aria-hidden="true">←</span> Previous
+              </span>
+              <span class="pager-title display">{prev.data.title}</span>
+            </a>
+          ) : (
+            <span />
+          )
+        }
+        {
+          next && (
+            <a class="next" href={`/work/${next.id}/`}>
+              <span class="label muted">
+                Next <span aria-hidden="true">→</span>
+              </span>
+              <span class="pager-title display">{next.data.title}</span>
+            </a>
+          )
+        }
+      </nav>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .project {
+    padding-top: var(--space-m);
+  }
+
+  .crumbs {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-s);
+  }
+
+  .crumbs a {
+    text-decoration: none;
+  }
+
+  .crumbs a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+  }
+
+  .head {
+    display: grid;
+    gap: var(--space-m);
+    padding-block: var(--space-xl) var(--space-l);
+  }
+
+  .title {
+    font-size: var(--step-5);
+    max-width: 16ch;
+  }
+
+  .summary {
+    font-size: var(--step-1);
+    line-height: 1.4;
+    max-width: 44ch;
+    color: var(--muted);
+  }
+
+  /* Meta strip: ruled cells of mono label + value. */
+  .meta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--ink);
+  }
+
+  .meta > div {
+    display: grid;
+    gap: var(--space-3xs);
+    align-content: start;
+    padding: var(--space-xs) var(--space-s) var(--space-s) 0;
+    border-bottom: var(--rule);
+  }
+
+  .meta dd {
+    font-size: var(--step--1);
+  }
+
+  .meta-stack {
+    grid-column: 1 / -1;
+  }
+
+  .links {
+    display: grid;
+    gap: 0.2em;
+    justify-items: start;
+  }
+
+  .flag {
+    color: var(--accent-text);
+    font-family: var(--mono);
+  }
+
+  @media (min-width: 64rem) {
+    .meta {
+      grid-template-columns: 1fr 3fr 1.2fr 1.6fr;
+    }
+
+    .meta > div + div {
+      padding-left: var(--space-s);
+      border-left: var(--rule);
+    }
+
+    .meta-stack {
+      border-left: 0 !important;
+      padding-left: 0 !important;
+    }
+  }
+
+  .cover {
+    margin-bottom: var(--space-2xl);
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border: 1px solid var(--ink);
+    background: var(--surface);
+  }
+
+  .cover :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .glance {
+    display: grid;
+    gap: var(--space-l) var(--col-gap);
+    padding-block: var(--space-l) var(--space-xl);
+  }
+
+  .glance h2 {
+    margin-bottom: var(--space-xs);
+  }
+
+  .glance p {
+    font-size: var(--step-1);
+    line-height: 1.45;
+    max-width: 38ch;
+  }
+
+  .n {
+    color: var(--accent-text);
+    margin-right: 0.9em;
+  }
+
+  @media (min-width: 48rem) {
+    .glance {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .approach-grid {
+    display: grid;
+    gap: var(--space-l) var(--col-gap);
+    padding-top: var(--space-l);
+  }
+
+  .toc ol {
+    display: grid;
+    gap: var(--space-2xs);
+    counter-reset: toc;
+  }
+
+  .toc li {
+    counter-increment: toc;
+    display: flex;
+    gap: 0.8em;
+    font-size: var(--step--1);
+  }
+
+  .toc li::before {
+    content: counter(toc, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: var(--step--2);
+    color: var(--muted);
+    padding-top: 0.2em;
+  }
+
+  .toc a {
+    text-decoration: none;
+  }
+
+  .toc a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+  }
+
+  @media (min-width: 64rem) {
+    .approach-grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    .toc {
+      grid-column: 1 / span 3;
+      align-self: start;
+      position: sticky;
+      top: var(--space-l);
+    }
+
+    .prose {
+      grid-column: 4 / span 7;
+    }
+  }
+
+  .shots {
+    padding-top: var(--space-2xl);
+  }
+
+  .shot-grid {
+    display: grid;
+    gap: var(--space-xl);
+    padding-top: var(--space-l);
+  }
+
+  .shot-grid figure {
+    display: grid;
+    gap: var(--space-2xs);
+    justify-items: start;
+  }
+
+  .shot-grid :global(img) {
+    width: auto;
+    max-width: 100%;
+    max-height: 85svh;
+    border: var(--rule);
+  }
+
+  @media (min-width: 64rem) {
+    .shot-grid figure {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+      align-items: end;
+    }
+
+    .shot-grid :global(img) {
+      grid-column: 1 / span 10;
+    }
+
+    .shot-grid figcaption {
+      grid-column: 11 / span 2;
+    }
+  }
+
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--col-gap);
+    margin-top: var(--space-2xl);
+    border-top: 1px solid var(--ink);
+  }
+
+  .pager a {
+    display: grid;
+    gap: var(--space-2xs);
+    align-content: start;
+    padding-top: var(--space-s);
+    text-decoration: none;
+  }
+
+  .next {
+    text-align: right;
+    justify-items: end;
+    grid-column: 2;
+  }
+
+  .pager-title {
+    font-size: var(--step-3);
+  }
+
+  .pager a:hover .pager-title {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 2px;
+  }
+</style>

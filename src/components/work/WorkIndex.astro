@@ -1,0 +1,43 @@
+---
+/** Selected Work: the featured project as a spread, then every other project as an index. */
+import { sectionNumber } from '../../lib/sections';
+import { getProjects } from '../../lib/projects';
+import SectionHeader from '../SectionHeader.astro';
+import FeaturedProject from './FeaturedProject.astro';
+import ProjectRow from './ProjectRow.astro';
+
+const projects = await getProjects();
+const featured = projects.find((p) => p.data.featured);
+const rest = projects.filter((p) => p !== featured);
+const numberOf = (p: (typeof projects)[number]) => projects.indexOf(p) + 1;
+---
+
+<section id="work" class="work" aria-labelledby="work-heading">
+  <div class="wrap">
+    <SectionHeader number={sectionNumber('work')} label="Selected work" id="work-heading" aside={`${projects.length} projects`} />
+
+    <h2 class="display heading">Things I’ve <em>built</em>, and how.</h2>
+
+    {featured && <FeaturedProject project={featured} number={numberOf(featured)} />}
+
+    <ol class="index" role="list">
+      {rest.map((p) => <ProjectRow project={p} number={numberOf(p)} />)}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .work {
+    padding-top: var(--space-2xl);
+  }
+
+  .heading {
+    font-size: var(--step-5);
+    margin-block: var(--space-m) var(--space-l);
+  }
+
+  .index {
+    margin-top: var(--space-l);
+    border-top: 1px solid var(--ink);
+  }
+</style>
