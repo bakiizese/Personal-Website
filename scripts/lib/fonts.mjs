@@ -11,8 +11,8 @@ const file = (pkg, name) =>
 
 // Family names are prefixed so they can't collide with generic keywords like `serif`.
 export const fontFaces = `
-  @font-face { font-family: 'BZ Serif'; font-style: normal; src: url(${file('@fontsource/instrument-serif', 'instrument-serif-latin-400-normal.woff2')}) format('woff2'); }
-  @font-face { font-family: 'BZ Serif'; font-style: italic; src: url(${file('@fontsource/instrument-serif', 'instrument-serif-latin-400-italic.woff2')}) format('woff2'); }
+  @font-face { font-family: 'BZ Serif'; font-style: normal; font-weight: 200 800; src: url(${file('@fontsource-variable/newsreader', 'newsreader-latin-standard-normal.woff2')}) format('woff2'); }
+  @font-face { font-family: 'BZ Serif'; font-style: italic; font-weight: 200 800; src: url(${file('@fontsource-variable/newsreader', 'newsreader-latin-standard-italic.woff2')}) format('woff2'); }
   @font-face { font-family: 'BZ Sans'; font-weight: 100 900; src: url(${file('@fontsource-variable/geist', 'geist-latin-wght-normal.woff2')}) format('woff2'); }
   @font-face { font-family: 'BZ Mono'; font-weight: 100 900; src: url(${file('@fontsource-variable/geist-mono', 'geist-mono-latin-wght-normal.woff2')}) format('woff2'); }
 `;

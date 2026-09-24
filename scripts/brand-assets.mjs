@@ -26,7 +26,10 @@ const fonts = `${fontFaces}
   * { margin: 0; box-sizing: border-box; }`;
 
 // Chromium won't load file:// images into a page set from about:blank, so embed the portrait.
-const portrait = await sharp(join(root, 'src/assets/portrait.png')).resize({ height: 1040 }).png().toBuffer();
+const mirror = /^\s*mirror: true/m.test(siteSrc);
+let portraitImg = sharp(join(root, 'src/assets/portrait.png')).resize({ height: 1040 });
+if (mirror) portraitImg = portraitImg.flop();
+const portrait = await portraitImg.png().toBuffer();
 const portraitSrc = `data:image/png;base64,${portrait.toString('base64')}`;
 
 const og = `<!doctype html><html><head><style>${fonts}
@@ -36,9 +39,10 @@ const og = `<!doctype html><html><head><style>${fonts}
     font-family: 'BZ Mono'; font-size: 17px; letter-spacing: .08em; text-transform: uppercase; }
   .top { top: 52px; } .bottom { bottom: 0; padding: 18px 0 30px; border-top: 1px solid #16171b; color: #5f5e59; }
   .n { color: #c23a1f; margin-right: 14px; }
-  h1 { position: absolute; left: 60px; bottom: 96px; font-family: 'BZ Serif'; font-weight: 400; font-size: 150px; line-height: .9; letter-spacing: -.02em; z-index: 1; }
+  h1 { position: absolute; left: 60px; bottom: 92px; font-family: 'BZ Serif'; font-weight: 500; font-size: 128px; line-height: 1; letter-spacing: -.025em; z-index: 1; }
+  h1 em { font-weight: 400; }
   .role { position: absolute; left: 64px; top: 128px; font-size: 26px; font-weight: 500; line-height: 1.25; }
-  .role em { display: block; font-family: 'BZ Serif'; font-size: 34px; color: #5f5e59; font-weight: 400; }
+  .role em { display: block; font-family: 'BZ Serif'; font-size: 30px; color: #5f5e59; font-weight: 400; }
   img { position: absolute; right: 70px; bottom: 67px; height: 520px; z-index: 2; }
 </style></head><body>
   <div class="light"></div>
@@ -52,7 +56,7 @@ const og = `<!doctype html><html><head><style>${fonts}
 // The icon: an ink square with a serif "B" and a vermilion full stop.
 const icon = (size) => `<!doctype html><html><head><style>${fonts}
   body { width: ${size}px; height: ${size}px; display: grid; place-items: center; background: #16171b; border-radius: ${size > 64 ? size * 0.18 : 0}px; }
-  span { font-family: 'BZ Serif'; color: #f5f2ec; font-size: ${size * 0.86}px; line-height: 1; transform: translate(${size * 0.02}px, ${size * 0.04}px); }
+  span { font-family: 'BZ Serif'; font-weight: 500; color: #f5f2ec; font-size: ${size * 0.78}px; line-height: 1; transform: translate(${size * 0.02}px, ${size * 0.04}px); }
   i { font-style: normal; color: #ff6b4a; }
 </style></head><body><span>B<i>.</i></span></body></html>`;
 

@@ -12,8 +12,9 @@
   font-family: var(--serif);
   font-size: var(--step-3);
   line-height: var(--leading-tight);
+  font-weight: 500;
   letter-spacing: var(--tracking-display);
-  margin-top: 1.6em;
+  margin-top: 1.4em;
 }
 
 .prose h2 + * {

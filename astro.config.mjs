@@ -24,13 +24,14 @@ export default defineConfig({
   fonts: [
     {
       provider: local,
-      name: 'Instrument Serif',
+      name: 'Newsreader',
       cssVariable: '--font-serif',
       fallbacks: ['Georgia', 'serif'],
       options: {
         variants: [
-          { src: [file('@fontsource/instrument-serif', 'instrument-serif-latin-400-normal.woff2')], weight: 400, style: 'normal' },
-          { src: [file('@fontsource/instrument-serif', 'instrument-serif-latin-400-italic.woff2')], weight: 400, style: 'italic' },
+          // Variable weight and optical size: headlines get the display cut automatically.
+          { src: [file('@fontsource-variable/newsreader', 'newsreader-latin-standard-normal.woff2')], weight: '200 800', style: 'normal' },
+          { src: [file('@fontsource-variable/newsreader', 'newsreader-latin-standard-italic.woff2')], weight: '200 800', style: 'italic' },
         ],
       },
     },

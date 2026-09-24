@@ -34,7 +34,7 @@ const portrait = Object.values(found)[0]?.default;
       <span class="line"><span class="rise"><em>{site.lastName}</em></span></span>
     </h1>
 
-    <div class="portrait">
+    <div class:list={['portrait', { mirror: site.portrait.mirror }]}>
       {
         portrait ? (
           <Picture
@@ -196,6 +196,10 @@ const portrait = Object.values(found)[0]?.default;
     height: auto;
   }
 
+  .mirror :global(.portrait-img) {
+    transform: scaleX(-1);
+  }
+
   .portrait-empty {
     display: grid;
     place-items: end start;
@@ -231,7 +235,7 @@ const portrait = Object.values(found)[0]?.default;
   .role-focus {
     font-family: var(--serif);
     font-style: italic;
-    font-size: 1.25em;
+    font-size: 1.12em;
     color: var(--muted);
   }
 
@@ -299,10 +303,10 @@ const portrait = Object.values(found)[0]?.default;
         'copy copy copy copy copy copy . . . . . .'
         '. . . . . . . . . . . .'
         'name name name name name name name name name name name name';
-      min-height: min(calc(100svh - 7rem), 58rem);
+      /* Height comes from the content, not the viewport, so there's no dead band of space. */
       /* Name size shared by the name and the portrait's position. The svh term keeps
          the whole name above the fold on short laptop screens (1366×768). */
-      --name-size: min(var(--step-6), 11rem, 19svh);
+      --name-size: min(var(--step-6), 9rem, 17svh);
     }
 
     .light {
@@ -322,21 +326,24 @@ const portrait = Object.values(found)[0]?.default;
     }
 
     .name {
-      margin-top: 0;
+      margin-top: var(--space-m);
       padding-bottom: var(--space-xs);
       font-size: var(--name-size);
     }
 
-    /* Anchored to the name, not the grid: "Zeselassie" is ~3.2em wide in Instrument Serif italic,
-       so starting the portrait at ~3em puts the shoulder over about half of the final letter
-       at every desktop width. */
+    /* Anchored to the name, not the grid: "Zeselassie" is 3.7em wide in Newsreader italic,
+       so starting the portrait at 3.45em puts the shoulder over about half of the final letter
+       at every desktop width. Re-measure if the display font changes. */
     .portrait {
       position: absolute;
       z-index: 2;
-      left: calc(var(--gutter) + var(--name-size) * 3.02);
+      left: calc(var(--gutter) + var(--name-size) * 3.45);
       bottom: 0;
       height: calc(100% - var(--space-l));
       margin: 0;
+      /* Clip at the bottom rule so the scroll drift sinks the portrait behind the line
+         instead of pushing it past it. The negative insets leave the top and sides free. */
+      clip-path: inset(-100vh -100vw 0 -100vw);
     }
 
     .portrait :global(picture) {

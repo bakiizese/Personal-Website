@@ -141,7 +141,7 @@ a:hover {
 
 .display {
   font-family: var(--serif);
-  font-weight: 400;
+  font-weight: 500;
   line-height: var(--leading-display);
   letter-spacing: var(--tracking-display);
 }
@@ -149,6 +149,7 @@ a:hover {
 .display em,
 .display i {
   font-style: italic;
+  font-weight: 400;
 }
 
 .visually-hidden {

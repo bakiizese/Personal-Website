@@ -79,6 +79,8 @@ export const site = {
    */
   portrait: {
     alt: 'Bereket Zeselassie, smiling, wearing glasses and a white shirt',
+    /** Flip the photo horizontally. Also applies to the share image (re-run `npm run brand`). */
+    mirror: true,
   },
 
   // REVIEW: the about paragraph(s). First person, plain.

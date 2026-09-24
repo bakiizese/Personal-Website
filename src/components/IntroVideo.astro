@@ -27,7 +27,7 @@ if (video.provider === 'youtube') {
 
     <div class="layout">
       <figure class="frame-wrap">
-        <div class="frame">
+        <div class:list={['frame', { 'frame--empty': !hasVideo }]}>
           {
             !hasVideo && (
               <div class="empty">
@@ -163,6 +163,11 @@ if (video.provider === 'youtube') {
     border: 1px solid var(--ink);
     background: var(--surface);
     overflow: hidden;
+  }
+
+  /* Shorter while there's no video, so an empty box doesn't take up a screen of height. */
+  .frame--empty {
+    aspect-ratio: 21 / 9;
   }
 
   .frame > :global(.player),

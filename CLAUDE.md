@@ -35,10 +35,12 @@ npm run brand           # regenerate public/og.png and favicons (after name/role
 - Both themes come from `light-dark()`. Check any new colour pair on `/styleguide` in both themes; WCAG AA is required everywhere.
 
 **Type:**
-- Instrument Serif (`--serif`, `.display`) for names and headlines, tight leading, the occasional word in *italic*.
+- Newsreader (`--serif`, `.display`) for names and headlines: weight 500, italic 400 for the occasional emphasised word. It's variable, and optical sizing follows the font size automatically. (Instrument Serif was tried first and rejected as too condensed; it made the page feel stretched vertically.)
 - Geist (`--sans`) for body and UI.
 - Geist Mono (`--mono`, `.label`) for small uppercase meta: `(02) Selected work`, dates, stack.
 - Fluid scale `--step--2` … `--step-6`. No Inter, no system font as the main face.
+
+**Vertical rhythm:** keep it compact. The hero is sized by its content, not the viewport. Sections are separated by `--space-2xl`, and headlines don't get extra air above and below. Bereket found the first, airier version "stretched".
 
 **Layout:**
 - 12-column grid (4 on mobile), asymmetric, left-aligned by default. Centre only with a reason.

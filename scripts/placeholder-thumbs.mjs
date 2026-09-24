@@ -52,8 +52,8 @@ function html({ title, year, stack }, position) {
       display: flex; flex-direction: column; justify-content: space-between; }
     .top, .bottom { display: flex; justify-content: space-between; font-size: 22px; letter-spacing: .12em; text-transform: uppercase; }
     .mark { color: #C23A1F; }
-    h1 { font-family: 'BZ Serif', serif; font-weight: 400; font-size: 150px; line-height: .92; letter-spacing: -.02em; max-width: 1300px; }
-    h1 em { font-style: italic; }
+    h1 { font-family: 'BZ Serif', serif; font-weight: 500; font-size: 128px; line-height: 1; letter-spacing: -.025em; max-width: 1300px; }
+    h1 em { font-style: italic; font-weight: 400; }
     .bottom { color: #5F5E59; border-top: 1px solid #DCD7CC; padding-top: 28px; }
   </style></head><body><div class="frame">
     <div class="top"><span class="mark">[Placeholder thumbnail]</span><span>No. ${String(position).padStart(2, '0')}</span></div>
