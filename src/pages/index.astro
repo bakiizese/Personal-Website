@@ -1,0 +1,30 @@
+---
+// Phase 1 scaffold: proves the content pipeline end to end. Replaced by the real sections in phases 3–5.
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { site } from '../config/site';
+import { getProjects, statusLabel } from '../lib/projects';
+import portrait from '../assets/portrait.png';
+
+const projects = await getProjects();
+---
+
+<Base>
+  <main>
+    <h1>{site.name}</h1>
+    <p>{site.role} — {site.roleFocus}</p>
+    <p>{site.intro}</p>
+    <Image src={portrait} alt={site.portrait.alt} width={400} />
+
+    <h2>Work</h2>
+    <ol>
+      {
+        projects.map((p) => (
+          <li>
+            <a href={`/work/${p.id}/`}>{p.data.title}</a> — {p.data.summary} ({p.data.year}, {statusLabel[p.data.status]})
+          </li>
+        ))
+      }
+    </ol>
+  </main>
+</Base>

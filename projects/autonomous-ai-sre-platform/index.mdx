@@ -1,0 +1,43 @@
+---
+title: Autonomous AI SRE platform
+slug: autonomous-ai-sre-platform
+summary: An AI agent that diagnoses GitHub issues, writes and tests a fix in a sandbox, and opens a PR only after a person approves it.
+thumbnail: ./thumbnail.png
+thumbnailAlt: Placeholder thumbnail with the project title set in type
+year: 2026
+role: Sole developer (agent, backend, dashboard)
+stack: [Python, FastAPI, LangGraph, Gemini, PostgreSQL, SQLAlchemy, Alembic, React 19, TypeScript, Vite, Tailwind CSS, Docker, GitHub Actions]
+links:
+  repo: https://github.com/bakiizese/autonomous-ai-sre-platform
+problem: >-
+  AI coding agents are easy to demo and hard to trust. I wanted one that could take a real GitHub issue
+  all the way to a pull request, but could never write to a repository without proof that its fix works
+  and a person saying yes.
+outcome: >-
+  A working demo. A LangGraph pipeline diagnoses the issue, writes a fix and a test, and runs both with
+  pytest in a throwaway sandbox. Nothing reaches GitHub until someone approves it in the dashboard, and
+  any public repo can be inspected read-only.
+order: 1
+featured: true
+status: in-progress
+---
+
+## The agent graph
+
+The pipeline is a LangGraph state graph with four nodes: diagnose, fix, generate a test, verify. Each node makes one structured Gemini call and retries on rate limits or malformed output. If verification fails, the graph loops back to the fix node once, with the failure attached, so the model gets one chance to correct itself before a person sees anything.
+
+## Proof before approval
+
+A generated fix is never shown on its own. The fix and its test are written into a temporary directory and run with pytest first, and the result goes into the review screen next to the diff. When someone approves, the platform creates a branch, commits and opens a PR with the diagnosis and the sandbox output attached. The approve action is the only code path that can write to GitHub.
+
+## Read-only by default
+
+Visitors can point it at any public repository. Those runs stop after diagnosis: the pipeline doesn't even generate a fix. Only repositories listed in `SANDBOX_REPOS` can be written to. A background poller checks those every 30 seconds, and when a repo is first connected, its existing issues are recorded as a baseline instead of being fixed in bulk.
+
+## Built around free-tier limits
+
+The demo runs on free Gemini and GitHub keys, so both rate limits are tracked and shown in the dashboard header. Anyone can subscribe an email address to a repo and get an alert when a diagnosis scores above 8 out of 10 for risk.
+
+## What’s next
+
+A second version with GitHub OAuth and accounts, isolation between tenants, signed webhooks instead of polling, a real job queue, and an audit log.
