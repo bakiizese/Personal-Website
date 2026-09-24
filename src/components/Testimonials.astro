@@ -1,5 +1,6 @@
 ---
 /** Testimonials. Only real ones with permission; with none in site.ts a marked placeholder shows instead. */
+import { sectionNumber } from '../lib/sections';
 import { site, type Testimonial } from '../config/site';
 import SectionHeader from './SectionHeader.astro';
 import Placeholder from './Placeholder.astro';
@@ -9,7 +10,7 @@ const items: Testimonial[] = site.testimonials;
 
 <section class="testimonials" aria-labelledby="testimonials-heading">
   <div class="wrap">
-    <SectionHeader number="05" label="What people say" id="testimonials-heading" />
+    <SectionHeader number={sectionNumber('testimonials')} label="What people say" id="testimonials-heading" />
 
     {
       items.length === 0 ? (

@@ -8,6 +8,7 @@ import Experience from '../components/Experience.astro';
 import Testimonials from '../components/Testimonials.astro';
 import Contact from '../components/Contact.astro';
 import { site } from '../config/site';
+import { isShown } from '../lib/sections';
 
 // Tells search engines who this site is about. Only real links are included.
 const schema = {
@@ -27,10 +28,10 @@ const schema = {
 
 <Base schema={schema}>
   <Hero />
-  <IntroVideo />
+  {isShown('intro') && <IntroVideo />}
   <WorkIndex />
   <About />
-  <Experience />
-  <Testimonials />
+  {isShown('experience') && <Experience />}
+  {isShown('testimonials') && <Testimonials />}
   <Contact />
 </Base>

@@ -18,7 +18,7 @@ npm run brand           # regenerate public/og.png and favicons (after name/role
 
 ## Where things live
 
-- `src/config/site.ts`: **all** personal content: name, role, bio, links, skills, experience, testimonials, video, résumé, contact copy. Components never hard-code personal content. `null` or an empty array renders a visible `[PLACEHOLDER]`. Lines marked `REVIEW:` are drafted copy awaiting Bereket's approval.
+- `src/config/site.ts`: **all** personal content: name, role, bio, links, skills, experience, testimonials, video, résumé, contact copy. Components never hard-code personal content. `null` or an empty array means "not provided". With `showPlaceholders: false` (the default, at Bereket's request) that content is **hidden**: empty sections, links without a URL, and projects with `status: placeholder` don't render. Setting it to `true` shows `[PLACEHOLDER]` markers instead. Home sections are numbered from `src/lib/sections.ts`, over the visible ones only. Lines marked `REVIEW:` are drafted copy awaiting Bereket's approval.
 - `projects/<slug>/index.mdx`: one folder per project, images beside it. Schema in `src/content.config.ts` (Zod, build-time). Extra checks in `src/lib/projects.ts` (slug = folder, unique `order`) and `scripts/check-projects.mjs` (image files exist). Guide: `docs/ADDING-PROJECTS.md`. `_template/` is never published.
 - `src/styles/tokens.css`: every colour, size, space and duration. `base.css`: reset, element defaults, utilities (`.wrap`, `.grid`, `.label`, `.display`, `.muted`). `prose.css`: MDX long-form.
 - `src/components/`: one file per section. `work/` holds the project listing.
@@ -63,7 +63,7 @@ npm run brand           # regenerate public/og.png and favicons (after name/role
 - Emoji or icon-in-a-circle feature cards; emoji bullets.
 - Three identical rounded cards in a row; everything centred.
 - Fade-up-on-scroll on every element.
-- Invented stats, fake testimonials, lorem ipsum. Anything not provided is a visible `[PLACEHOLDER]`.
+- Invented stats, fake testimonials, lorem ipsum. Anything not provided is hidden (or a visible `[PLACEHOLDER]` with `showPlaceholders: true`), never made up.
 - Generic copy ("passionate developer crafting digital experiences"). Write plain, specific, first person.
 - Heavy shadows; border radius above 2px; pill buttons; decorative social-icon circles.
 
@@ -71,7 +71,7 @@ npm run brand           # regenerate public/og.png and favicons (after name/role
 
 - Never invent facts, numbers, employers or quotes. Project copy comes from the repos' own READMEs and code. Cite figures only when the repo states them.
 - New copy for Bereket goes in `site.ts` with a `REVIEW:` comment.
-- Testimonials: real, attributed, with permission, or the placeholder stays.
+- Testimonials: real, attributed, with permission, or the section stays hidden.
 
 ## Gotchas
 

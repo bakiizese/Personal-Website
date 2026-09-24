@@ -1,5 +1,6 @@
 ---
 /** About: the bio on the left, skills grouped by how often I use them on the right. No bars, no percentages. */
+import { sectionNumber } from '../lib/sections';
 import { site } from '../config/site';
 import SectionHeader from './SectionHeader.astro';
 
@@ -8,7 +9,7 @@ const [lead, ...rest] = site.about;
 
 <section id="about" class="about" aria-labelledby="about-heading">
   <div class="wrap">
-    <SectionHeader number="03" label="About" id="about-heading" aside={site.location} />
+    <SectionHeader number={sectionNumber('about')} label="About" id="about-heading" aside={site.location} />
 
     <div class="layout">
       <div class="bio">

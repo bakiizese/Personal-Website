@@ -1,9 +1,11 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { site } from '../config/site';
 
 export type Project = CollectionEntry<'projects'>;
 
 /**
- * All projects, sorted by `order`. Also runs the checks Zod can't express on a single entry:
+ * All published projects, sorted by `order`. Projects with status "placeholder" are validated
+ * but left out unless `site.showPlaceholders` is on. Also runs the checks Zod can't express on a single entry:
  * the slug must match its folder name, and no two projects may share a slug or an order.
  */
 export async function getProjects(): Promise<Project[]> {
@@ -26,7 +28,9 @@ export async function getProjects(): Promise<Project[]> {
     throw new Error(`\n\nProject validation failed:\n  - ${problems.join('\n  - ')}\n\nSee docs/ADDING-PROJECTS.md\n`);
   }
 
-  return projects.sort((a, b) => a.data.order - b.data.order);
+  return projects
+    .filter((p) => site.showPlaceholders || p.data.status !== 'placeholder')
+    .sort((a, b) => a.data.order - b.data.order);
 }
 
 export const statusLabel: Record<Project['data']['status'], string> = {

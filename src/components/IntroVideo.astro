@@ -5,6 +5,7 @@
  * (privacy-enhanced domain) or Vimeo (do-not-track) are only injected on click.
  * A self-hosted file gets native controls and a captions track.
  */
+import { sectionNumber } from '../lib/sections';
 import { site } from '../config/site';
 import SectionHeader from './SectionHeader.astro';
 import Placeholder from './Placeholder.astro';
@@ -23,7 +24,7 @@ if (video.provider === 'youtube') {
 
 <section class="intro-video" aria-labelledby="intro-heading">
   <div class="wrap">
-    <SectionHeader number="01" label="Intro" id="intro-heading" aside={duration ? `${duration}` : 'Video'} />
+    <SectionHeader number={sectionNumber('intro')} label="Intro" id="intro-heading" aside={duration ? `${duration}` : 'Video'} />
 
     <div class="layout">
       <figure class="frame-wrap">

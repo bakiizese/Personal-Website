@@ -76,7 +76,7 @@ const portrait = Object.values(found)[0]?.default;
     <div class="strip label">
       <ul class="links" role="list" aria-label="Profiles">
         {
-          site.links.map((link) => (
+          site.links.filter((link) => link.href || site.showPlaceholders).map((link) => (
             <li>
               {link.href ? (
                 <a href={link.href} rel="me noopener" target="_blank">

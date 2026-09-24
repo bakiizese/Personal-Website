@@ -1,5 +1,6 @@
 ---
 /** Selected Work: the featured project as a spread, then every other project as an index. */
+import { sectionNumber } from '../../lib/sections';
 import { getProjects } from '../../lib/projects';
 import SectionHeader from '../SectionHeader.astro';
 import FeaturedProject from './FeaturedProject.astro';
@@ -13,7 +14,7 @@ const numberOf = (p: (typeof projects)[number]) => projects.indexOf(p) + 1;
 
 <section id="work" class="work" aria-labelledby="work-heading">
   <div class="wrap">
-    <SectionHeader number="02" label="Selected work" id="work-heading" aside={`${projects.length} projects`} />
+    <SectionHeader number={sectionNumber('work')} label="Selected work" id="work-heading" aside={`${projects.length} projects`} />
 
     <h2 class="display heading">Things I’ve <em>built</em>, and how.</h2>
 

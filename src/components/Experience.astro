@@ -1,5 +1,6 @@
 ---
 /** Experience as a ruled timeline. With no entries in site.ts, two marked placeholder rows show the layout. */
+import { sectionNumber } from '../lib/sections';
 import { site, type ExperienceItem } from '../config/site';
 import SectionHeader from './SectionHeader.astro';
 import Placeholder from './Placeholder.astro';
@@ -16,7 +17,7 @@ function when(value: string | null): string {
 
 <section id="experience" class="experience" aria-labelledby="experience-heading">
   <div class="wrap">
-    <SectionHeader number="04" label="Experience" id="experience-heading" />
+    <SectionHeader number={sectionNumber('experience')} label="Experience" id="experience-heading" />
 
     <ol class="timeline" role="list">
       {

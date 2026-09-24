@@ -2,7 +2,8 @@
  * All personal content for the site lives here. Edit this file, not the components.
  *
  * Conventions:
- *   - `null` means "not provided yet". The page renders a visible [PLACEHOLDER] in its place.
+ *   - `null` (or an empty list) means "not provided yet". It's hidden on the page unless
+ *     `showPlaceholders` below is true, in which case a [PLACEHOLDER] marker shows instead.
  *   - Lines marked `REVIEW:` are copy I drafted for you. Read them and rewrite in your own words.
  *   - Projects are NOT here. They live in /projects (see docs/ADDING-PROJECTS.md).
  */
@@ -31,6 +32,12 @@ export type Video =
   | { provider: null };
 
 export const site = {
+  /**
+   * false: anything not provided yet is hidden (empty sections, links without a URL, projects with
+   * status "placeholder"). true: show visible [PLACEHOLDER] markers instead, to see where content goes.
+   */
+  showPlaceholders: false,
+
   /** Full origin, no trailing slash. [PLACEHOLDER] until you have a domain. `.invalid` is a reserved TLD. */
   url: 'https://placeholder.invalid',
 
@@ -65,7 +72,7 @@ export const site = {
   links: [
     { label: 'GitHub', href: 'https://github.com/bakiizese' },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/bereket-zeselassie-embaye' },
-    { label: 'Upwork', href: null }, // [PLACEHOLDER] your Upwork profile URL
+    { label: 'Upwork', href: 'https://www.upwork.com/freelancers/~0156c4977a1c11ae72' },
     { label: 'Telegram', href: 'https://t.me/bereket_zeselassie' },
   ] satisfies Link[],
 

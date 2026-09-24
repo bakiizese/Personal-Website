@@ -21,6 +21,8 @@ export default defineConfig({
   integrations: [mdx(), sitemap({ filter: (page) => !hidden.some((path) => page.includes(path)) })],
   build: { inlineStylesheets: 'auto' },
   prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
+  // Astro's dev toolbar only ever shows on the local dev server; it's off so it doesn't cover the footer while reviewing.
+  devToolbar: { enabled: false },
   fonts: [
     {
       provider: local,

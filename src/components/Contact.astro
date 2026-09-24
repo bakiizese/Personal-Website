@@ -4,6 +4,7 @@
  * whose mail client doesn't open), plus availability, profiles and the résumé.
  * No form: a static site has nowhere to send one. Add one only if it's wired to a real service.
  */
+import { sectionNumber } from '../lib/sections';
 import { site } from '../config/site';
 import { emphasis } from '../lib/text';
 import SectionHeader from './SectionHeader.astro';
@@ -13,7 +14,7 @@ import Placeholder from './Placeholder.astro';
 
 <section id="contact" class="contact" aria-labelledby="contact-heading">
   <div class="wrap">
-    <SectionHeader number="06" label="Contact" id="contact-heading" aside={`${site.timezone.offset} · ${site.timezone.label}`} />
+    <SectionHeader number={sectionNumber('contact')} label="Contact" id="contact-heading" aside={`${site.timezone.offset} · ${site.timezone.label}`} />
 
     <h2 class="display heading" set:html={emphasis(site.contact.heading)} />
 
@@ -41,7 +42,7 @@ import Placeholder from './Placeholder.astro';
           <dd>
             <ul class="links" role="list">
               {
-                site.links.map((link) => (
+                site.links.filter((link) => link.href || site.showPlaceholders).map((link) => (
                   <li>
                     {link.href ? (
                       <a href={link.href} target="_blank" rel="me noopener">
@@ -57,6 +58,7 @@ import Placeholder from './Placeholder.astro';
             </ul>
           </dd>
         </div>
+        {(site.resume || site.showPlaceholders) && (
         <div>
           <dt class="label muted">Résumé</dt>
           <dd>
@@ -71,6 +73,7 @@ import Placeholder from './Placeholder.astro';
             }
           </dd>
         </div>
+        )}
       </dl>
     </div>
   </div>

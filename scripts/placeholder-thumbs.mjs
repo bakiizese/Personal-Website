@@ -1,4 +1,4 @@
-// Generates a clearly marked typographic placeholder thumbnail for a project.
+// Generates a typographic cover thumbnail (title set in type) for a project without a screenshot.
 //
 //   npm run thumbs -- my-project            → projects/my-project/thumbnail.png
 //   npm run thumbs -- my-project other-one  → several at once
@@ -56,7 +56,7 @@ function html({ title, year, stack }, position) {
     h1 em { font-style: italic; font-weight: 400; }
     .bottom { color: #5F5E59; border-top: 1px solid #DCD7CC; padding-top: 28px; }
   </style></head><body><div class="frame">
-    <div class="top"><span class="mark">[Placeholder thumbnail]</span><span>No. ${String(position).padStart(2, '0')}</span></div>
+    <div class="top"><span class="mark">Case study</span><span>No. ${String(position).padStart(2, '0')}</span></div>
     <h1>${esc(words.join(' '))} <em>${esc(last)}</em></h1>
     <div class="bottom"><span>${esc(stack.slice(0, 4).join(' · '))}</span><span>${esc(year)}</span></div>
   </div></body></html>`;

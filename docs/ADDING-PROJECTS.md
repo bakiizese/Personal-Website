@@ -19,7 +19,7 @@ projects/
    cp -r projects/_template projects/booking-tool
    ```
 
-2. **Add a thumbnail** to the new folder as `thumbnail.png` (or `.jpg` / `.webp`, and update the `thumbnail:` line to match). 16:10 works best, at least 1600×1000. A real screenshot is always better. If you don't have one yet, generate a clearly marked typographic placeholder:
+2. **Add a thumbnail** to the new folder as `thumbnail.png` (or `.jpg` / `.webp`, and update the `thumbnail:` line to match). 16:10 works best, at least 1600×1000. A real screenshot is always better. If you don’t have one yet, generate a typographic cover (the title set in type):
 
    ```bash
    npm run thumbs -- booking-tool
@@ -53,7 +53,7 @@ projects/
 | `outcome` | yes | 1–3 sentences: what changed. Only results you can back up. |
 | `order` | yes | Position on the home page. Lower comes first. Must be unique. |
 | `featured` | no | `true` shows it as the large spread at the top of Selected Work. Use it on one project only. |
-| `status` | yes | `live`, `in-progress`, `complete`, `archived`, or `placeholder`. |
+| `status` | yes | `live`, `in-progress`, `complete`, `archived`, or `placeholder`. A `placeholder` project is hidden from the site (unless `showPlaceholders` is on in `src/config/site.ts`), so you can use it for drafts. |
 | `screenshots` | no | Extra images for the project page. See below. |
 
 ## Reordering
@@ -77,9 +77,9 @@ screenshots:
 
 They appear in a "Screens" section after the write-up. Images are resized and compressed automatically at build time, so add them at full resolution.
 
-## Removing the placeholder projects
+## The placeholder projects
 
-Delete the two folders when you have real projects to replace them:
+`placeholder-project-one` and `placeholder-project-two` have `status: placeholder`, so they're hidden from the site. Set `showPlaceholders: true` in `src/config/site.ts` to see them while you work on the layout, or delete them when you no longer need them:
 
 ```bash
 rm -r projects/placeholder-project-one projects/placeholder-project-two
