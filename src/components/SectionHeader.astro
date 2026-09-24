@@ -1,0 +1,42 @@
+---
+/**
+ * The ruled strip that opens every section: "(02)  Selected work ——————  aside".
+ * The number and label are mono meta; the optional title below it is the serif headline.
+ */
+interface Props {
+  number: string;
+  label: string;
+  id?: string;
+  aside?: string;
+}
+
+const { number, label, id, aside } = Astro.props;
+---
+
+<div class="section-head">
+  <p class="label">
+    <span class="num" aria-hidden="true">({number})</span>
+    <span id={id}>{label}</span>
+  </p>
+  {aside && <p class="label muted aside">{aside}</p>}
+</div>
+
+<style>
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-s);
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--ink);
+  }
+
+  .num {
+    color: var(--accent-text);
+    margin-right: 0.9em;
+  }
+
+  .aside {
+    text-align: right;
+  }
+</style>

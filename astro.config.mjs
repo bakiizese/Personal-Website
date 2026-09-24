@@ -1,13 +1,54 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig, fontProviders } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { site } from './src/config/site.ts';
 
+// Fonts come straight from the installed @fontsource packages: no network at build time,
+// self-hosted, and Astro generates metric-matched fallbacks so text doesn't jump when they load.
+// Latin subset only (the site is in English). Characters outside it, such as arrows, fall back to the system font.
+const local = fontProviders.local();
+/** @type {(pkg: string, name: string) => string} */
+const file = (pkg, name) => `./node_modules/${pkg}/files/${name}`;
+
 export default defineConfig({
   site: site.url,
   trailingSlash: 'ignore',
-  integrations: [mdx(), sitemap()],
+  integrations: [mdx(), sitemap({ filter: (page) => !page.includes('/styleguide') })],
   build: { inlineStylesheets: 'auto' },
   prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
+  fonts: [
+    {
+      provider: local,
+      name: 'Instrument Serif',
+      cssVariable: '--font-serif',
+      fallbacks: ['Georgia', 'serif'],
+      options: {
+        variants: [
+          { src: [file('@fontsource/instrument-serif', 'instrument-serif-latin-400-normal.woff2')], weight: 400, style: 'normal' },
+          { src: [file('@fontsource/instrument-serif', 'instrument-serif-latin-400-italic.woff2')], weight: 400, style: 'italic' },
+        ],
+      },
+    },
+    {
+      provider: local,
+      name: 'Geist',
+      cssVariable: '--font-sans',
+      fallbacks: ['Arial', 'sans-serif'],
+      options: {
+        variants: [{ src: [file('@fontsource-variable/geist', 'geist-latin-wght-normal.woff2')], weight: '100 900', style: 'normal' }],
+      },
+    },
+    {
+      provider: local,
+      name: 'Geist Mono',
+      cssVariable: '--font-mono',
+      fallbacks: ['ui-monospace', 'Menlo', 'monospace'],
+      options: {
+        variants: [
+          { src: [file('@fontsource-variable/geist-mono', 'geist-mono-latin-wght-normal.woff2')], weight: '100 900', style: 'normal' },
+        ],
+      },
+    },
+  ],
 });

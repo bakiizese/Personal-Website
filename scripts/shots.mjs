@@ -26,9 +26,22 @@ if (!routes.length) {
   routes = ['/', ...work, '/404'];
 }
 
-const server = spawn('npx', ['astro', 'preview', '--port', String(PORT)], { cwd: root, stdio: 'pipe' });
+// --ignore-lock keeps the server in the foreground: Astro 7 otherwise detaches it into a background process
+// when it detects an AI agent, and that stray server keeps the port. The process group is stopped on exit too.
+const server = spawn(join(root, 'node_modules', '.bin', 'astro'), ['preview', '--port', String(PORT), '--ignore-lock'], {
+  cwd: root,
+  stdio: 'pipe',
+  detached: true,
+});
+const stop = () => {
+  try {
+    process.kill(-server.pid);
+  } catch {}
+};
+process.on('exit', stop);
 await new Promise((ok, fail) => {
-  server.stdout.on('data', (d) => String(d).includes(String(PORT)) && ok());
+  server.stdout.on('data', (d) => String(d).includes(`localhost:${PORT}`) && ok());
+  server.stderr.on('data', (d) => /in use/i.test(String(d)) && fail(new Error(`Port ${PORT} is busy. Stop the other server first.`)));
   server.on('exit', (code) => fail(new Error(`astro preview exited (${code}). Did you run npm run build?`)));
 });
 
@@ -56,5 +69,5 @@ try {
   }
 } finally {
   await browser.close();
-  server.kill();
+  stop();
 }

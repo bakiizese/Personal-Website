@@ -16,7 +16,7 @@ const { Content } = await render(project);
 ---
 
 <Base title={data.title} description={data.summary}>
-  <main>
+  <div class="wrap">
     <h1>{data.title}</h1>
     <p>{data.summary}</p>
     <Image src={data.thumbnail} alt={data.thumbnailAlt} width={800} />
@@ -28,5 +28,5 @@ const { Content } = await render(project);
       <dt>Outcome</dt><dd>{data.outcome}</dd>
     </dl>
     <Content />
-  </main>
+  </div>
 </Base>

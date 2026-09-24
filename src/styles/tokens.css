@@ -1,0 +1,86 @@
+/*
+ * Design tokens. Every colour, size and duration on the site comes from here.
+ * Rules for using them are in CLAUDE.md. Contrast ratios are listed on /styleguide.
+ *
+ * Theming: `light-dark()` picks the value for the active colour scheme.
+ * No data-theme attribute → follow the OS. data-theme="light" | "dark" → forced by the toggle.
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* Colour ------------------------------------------------------------ */
+  --paper: light-dark(#f5f2ec, #0f1013); /* page background */
+  --surface: light-dark(#fbf9f5, #17181c); /* raised areas: video frame, placeholders */
+  --ink: light-dark(#16171b, #ece8e1); /* primary text */
+  --muted: light-dark(#5f5e59, #9a978f); /* secondary text, meta */
+  --line: light-dark(#dcd7cc, #2a2b30); /* decorative rules and dividers only */
+  --line-strong: light-dark(#8c887f, #6b6963); /* borders that must be seen (3:1 on paper) */
+
+  /* Accent. Two tokens because #E2482B is only 3.6:1 on paper:
+     --accent       markers, rules, focus rings, large display text (needs 3:1)
+     --accent-text  links, small text, the CTA fill (needs 4.5:1)
+     --on-accent    text sitting on an --accent-text fill */
+  --accent: light-dark(#e2482b, #ff6b4a);
+  --accent-text: light-dark(#c23a1f, #ff6b4a);
+  --on-accent: light-dark(#ffffff, #0f1013);
+
+  /* Soft warm window light behind the hero portrait. Low chroma on purpose. */
+  --window-light: light-dark(rgb(255 226 196 / 0.9), rgb(255 190 140 / 0.07));
+  --window-light-edge: light-dark(rgb(245 242 236 / 0), rgb(15 16 19 / 0));
+
+  /* Type -------------------------------------------------------------- */
+  --serif: var(--font-serif), Georgia, serif;
+  --sans: var(--font-sans), Arial, sans-serif;
+  --mono: var(--font-mono), ui-monospace, Menlo, monospace;
+
+  /* Fluid scale: min at 390px viewport, max at 1440px. */
+  --step--2: clamp(0.75rem, 0.7268rem + 0.0952vw, 0.8125rem); /* mono labels */
+  --step--1: clamp(0.875rem, 0.8286rem + 0.1905vw, 1rem); /* small text, captions */
+  --step-0: clamp(1rem, 0.9536rem + 0.1905vw, 1.125rem); /* body */
+  --step-1: clamp(1.25rem, 1.1571rem + 0.381vw, 1.5rem); /* lead paragraphs */
+  --step-2: clamp(1.5rem, 1.2679rem + 0.9524vw, 2.125rem); /* h3 */
+  --step-3: clamp(2rem, 1.6286rem + 1.5238vw, 3rem); /* h2 in prose */
+  --step-4: clamp(2.5rem, 1.7571rem + 3.0476vw, 4.5rem); /* section titles */
+  --step-5: clamp(3.25rem, 1.8571rem + 5.7143vw, 7rem); /* large statements */
+  --step-6: clamp(4rem, 1.0286rem + 12.1905vw, 12rem); /* hero name */
+
+  --leading-display: 0.92;
+  --leading-tight: 1.15;
+  --leading-body: 1.6;
+  --tracking-display: -0.02em;
+  --tracking-label: 0.08em;
+  --measure: 62ch;
+
+  /* Space ------------------------------------------------------------- */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-s: 1rem;
+  --space-m: clamp(1.25rem, 1.1071rem + 0.5714vw, 1.625rem);
+  --space-l: clamp(2rem, 1.7143rem + 1.1429vw, 2.75rem);
+  --space-xl: clamp(3rem, 2.4286rem + 2.2857vw, 4.5rem);
+  --space-2xl: clamp(4.5rem, 3.3571rem + 4.5714vw, 7.5rem); /* between sections */
+
+  /* Layout ------------------------------------------------------------ */
+  --page-max: 90rem;
+  --gutter: clamp(1rem, 0.3571rem + 2.6374vw, 3rem); /* 16px at 390, 48px at 1440 */
+  --col-gap: clamp(1rem, 0.7143rem + 1.1429vw, 1.75rem);
+  --radius: 2px;
+  --rule: 1px solid var(--line);
+
+  /* Motion ------------------------------------------------------------ */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 160ms;
+  --dur-med: 320ms;
+  --dur-slow: 900ms;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}

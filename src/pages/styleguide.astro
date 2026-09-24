@@ -1,0 +1,368 @@
+---
+/**
+ * Design system reference. Not linked from the site, excluded from the sitemap, noindex.
+ * Contrast ratios are measured in the browser from the real computed colours, so they can't drift from tokens.css.
+ */
+import Base from '../layouts/Base.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import Button from '../components/Button.astro';
+import StackList from '../components/StackList.astro';
+import Placeholder from '../components/Placeholder.astro';
+import Availability from '../components/Availability.astro';
+import '../styles/prose.css';
+
+const colours = [
+  { token: '--paper', use: 'Page background' },
+  { token: '--surface', use: 'Raised areas' },
+  { token: '--ink', use: 'Primary text' },
+  { token: '--muted', use: 'Secondary text' },
+  { token: '--line', use: 'Decorative rules only' },
+  { token: '--line-strong', use: 'Borders that must be seen' },
+  { token: '--accent', use: 'Markers, focus, large text' },
+  { token: '--accent-text', use: 'Links, small text, CTA fill' },
+];
+
+// Pairs to check: [foreground, background, what it's used for, required ratio]
+const pairs = [
+  ['--ink', '--paper', 'Body text', 4.5],
+  ['--muted', '--paper', 'Secondary text', 4.5],
+  ['--muted', '--surface', 'Secondary text on surface', 4.5],
+  ['--accent-text', '--paper', 'Links, labels', 4.5],
+  ['--accent-text', '--surface', 'Links on surface', 4.5],
+  ['--on-accent', '--accent-text', 'CTA label', 4.5],
+  ['--accent', '--paper', 'Markers, focus ring, 24px+ text', 3],
+  ['--line-strong', '--paper', 'Visible borders', 3],
+  ['--line', '--paper', 'Decorative rules (exempt)', 1],
+] as const;
+
+const steps = [
+  ['--step-6', 'serif', 'Bereket'],
+  ['--step-5', 'serif', 'Large statement'],
+  ['--step-4', 'serif', 'Section title, with <em>italic</em>'],
+  ['--step-3', 'serif', 'Prose heading'],
+  ['--step-2', 'serif', 'Third-level heading'],
+  ['--step-1', 'sans', 'Lead paragraph. One specific sentence about what I do and for whom.'],
+  ['--step-0', 'sans', 'Body text. Plain, specific, first person. The quick brown fox jumps over the lazy dog.'],
+  ['--step--1', 'sans', 'Small text and captions.'],
+  ['--step--2', 'mono', '(02) Selected work · 2026 · FastAPI / LangGraph'],
+] as const;
+---
+
+<Base title="Style guide" noindex>
+  <div class="wrap sg">
+    <header class="intro">
+      <p class="label muted">Design system · not linked from the site</p>
+      <h1 class="display title">Paper <em>&amp;</em> Ink</h1>
+      <p class="lead">Editorial, warm, precise. One accent, used sparingly. Toggle the theme to check both.</p>
+    </header>
+
+    <section aria-labelledby="sg-colour">
+      <SectionHeader number="01" label="Colour" id="sg-colour" aside="Values follow the active theme" />
+      <ul class="swatches" role="list">
+        {
+          colours.map((c) => (
+            <li>
+              <span class="chip" style={`background: var(${c.token})`} />
+              <code class="label">{c.token}</code>
+              <span class="value label muted" data-value={c.token} />
+              <span class="use">{c.use}</span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Contrast table">
+      <table class="contrast">
+        <caption class="label muted">Contrast, measured live (WCAG 2.2)</caption>
+        <thead>
+          <tr><th>Pair</th><th>Used for</th><th>Needs</th><th>Ratio</th><th>Result</th></tr>
+        </thead>
+        <tbody>
+          {
+            pairs.map(([fg, bg, use, need]) => (
+              <tr data-fg={fg} data-bg={bg} data-need={need}>
+                <td><span class="sample" style={`color: var(${fg}); background: var(${bg})`}>Aa</span> <code>{fg}</code> on <code>{bg}</code></td>
+                <td>{use}</td>
+                <td class="label">{need > 1 ? `${need}:1` : '—'}</td>
+                <td class="label ratio">…</td>
+                <td class="label result">…</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="sg-type">
+      <SectionHeader number="02" label="Type" id="sg-type" aside="Fluid: 390px → 1440px" />
+      <ul class="type" role="list">
+        {
+          steps.map(([step, face, text]) => (
+            <li>
+              <code class="label muted">{step} · {face}</code>
+              <p
+                class:list={[{ display: face === 'serif', label: face === 'mono' }]}
+                style={`font-size: var(${step}); font-family: var(--${face})`}
+                set:html={text}
+              />
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section aria-labelledby="sg-ui">
+      <SectionHeader number="03" label="Interface" id="sg-ui" />
+      <div class="ui">
+        <div>
+          <p class="label muted">Actions: one primary per view</p>
+          <div class="row">
+            <Button href="#">Hire me</Button>
+            <Button href="#" variant="text" arrow="↓">See the work</Button>
+            <Button href="https://github.com/bakiizese" variant="text" arrow="↗">GitHub</Button>
+          </div>
+        </div>
+        <div>
+          <p class="label muted">Inline link</p>
+          <p>I write about it <a href="#">in the project notes</a>, including what went wrong.</p>
+        </div>
+        <div>
+          <p class="label muted">Stack</p>
+          <StackList items={['Python', 'FastAPI', 'LangGraph', 'PostgreSQL', 'React', 'Docker']} limit={4} />
+        </div>
+        <div>
+          <p class="label muted">Availability</p>
+          <Availability />
+        </div>
+        <div>
+          <p class="label muted">Placeholders</p>
+          <p>Upwork: <Placeholder what="Upwork profile URL" /></p>
+          <Placeholder what="Testimonials" block>Add real ones in src/config/site.ts. Nothing is shown until you do.</Placeholder>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="sg-grid">
+      <SectionHeader number="04" label="Grid" id="sg-grid" aside="4 columns → 12 at 768px" />
+      <div class="grid demo-grid" aria-hidden="true">
+        {Array.from({ length: 12 }, (_, i) => <span>{i + 1}</span>)}
+      </div>
+      <div class="grid demo-layout">
+        <p class="a label">Label column</p>
+        <p class="b">Content spans seven columns, starting at column four. Text stays left-aligned; nothing is centred without a reason.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="sg-prose">
+      <SectionHeader number="05" label="Prose" id="sg-prose" aside="Project pages" />
+      <div class="prose">
+        <h2>Proof before approval</h2>
+        <p>A generated fix is never shown on its own. The fix and its test run with <code>pytest</code> first, and the result goes into the review screen next to the diff.</p>
+        <ul>
+          <li>The approve action is the only code path that writes to GitHub.</li>
+          <li>Public repositories are inspected read-only.</li>
+        </ul>
+        <blockquote>Nothing reaches GitHub until someone says yes.</blockquote>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import { contrast, grade } from '../lib/contrast';
+
+  // A fresh element per read: reusing one probe sometimes returns a stale computed colour in Chromium.
+  function hex(token: string): string {
+    const probe = document.createElement('span');
+    probe.style.color = `var(${token})`;
+    document.body.append(probe);
+    const [r, g, b] = getComputedStyle(probe).color.match(/\d+(\.\d+)?/g)!.map(Number);
+    probe.remove();
+    return '#' + [r, g, b].map((v) => Math.round(v).toString(16).padStart(2, '0')).join('');
+  }
+
+  function measure() {
+    document.querySelectorAll<HTMLElement>('[data-value]').forEach((el) => (el.textContent = hex(el.dataset.value!)));
+    document.querySelectorAll<HTMLElement>('tr[data-fg]').forEach((row) => {
+      const ratio = contrast(hex(row.dataset.fg!), hex(row.dataset.bg!));
+      const need = Number(row.dataset.need);
+      row.querySelector('.ratio')!.textContent = `${ratio.toFixed(2)}:1`;
+      const result = row.querySelector<HTMLElement>('.result')!;
+      result.textContent = need <= 1 ? 'exempt' : ratio >= need ? `pass (${grade(ratio)})` : 'FAIL';
+      result.dataset.fail = String(need > 1 && ratio < need);
+    });
+  }
+
+  measure();
+  new MutationObserver(measure).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', measure);
+</script>
+
+<style>
+  .sg {
+    display: grid;
+    gap: var(--space-2xl);
+    padding-top: var(--space-xl);
+  }
+
+  .title {
+    font-size: var(--step-5);
+    margin-block: var(--space-2xs) var(--space-s);
+  }
+
+  .lead {
+    font-size: var(--step-1);
+    max-width: 40ch;
+    color: var(--muted);
+  }
+
+  section {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(9.5rem, 40%), 1fr));
+    gap: var(--space-m) var(--col-gap);
+  }
+
+  .swatches li {
+    display: grid;
+    align-content: start;
+    gap: var(--space-3xs);
+    font-size: var(--step--1);
+  }
+
+  .chip {
+    height: 4.5rem;
+    border: var(--rule);
+    border-radius: var(--radius);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+  }
+
+  .contrast {
+    width: 100%;
+    min-width: 42rem;
+    border-collapse: collapse;
+    font-size: var(--step--1);
+  }
+
+  .contrast caption {
+    text-align: left;
+    padding-bottom: var(--space-xs);
+  }
+
+  .contrast th {
+    text-align: left;
+    font-family: var(--mono);
+    font-size: var(--step--2);
+    font-weight: 450;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .contrast th,
+  .contrast td {
+    padding: var(--space-2xs) var(--space-s) var(--space-2xs) 0;
+    border-bottom: var(--rule);
+    vertical-align: middle;
+  }
+
+  .sample {
+    display: inline-block;
+    padding: 0 0.4em;
+    border: var(--rule);
+    font-weight: 500;
+  }
+
+  .result[data-fail='true'] {
+    color: var(--accent-text);
+    font-weight: 700;
+  }
+
+  .type {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .type li {
+    display: grid;
+    gap: var(--space-3xs);
+    padding-bottom: var(--space-m);
+    border-bottom: var(--rule);
+  }
+
+  .type p {
+    overflow-wrap: anywhere;
+  }
+
+  .ui {
+    display: grid;
+    gap: var(--space-l);
+    max-width: 48rem;
+  }
+
+  .ui > div {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-s) var(--space-l);
+  }
+
+  .demo-grid span {
+    display: grid;
+    place-items: end center;
+    height: 5rem;
+    padding-bottom: var(--space-2xs);
+    font-family: var(--mono);
+    font-size: var(--step--2);
+    color: var(--muted);
+    background: color-mix(in srgb, var(--accent) 7%, transparent);
+    border-inline: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+
+  .demo-grid span:nth-child(n + 5) {
+    display: none;
+  }
+
+  @media (min-width: 48rem) {
+    .demo-grid span:nth-child(n + 5) {
+      display: grid;
+    }
+  }
+
+  .demo-layout {
+    margin-top: var(--space-s);
+    row-gap: var(--space-2xs);
+  }
+
+  .demo-layout .a {
+    grid-column: 1 / -1;
+  }
+
+  .demo-layout .b {
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 48rem) {
+    .demo-layout .a {
+      grid-column: 1 / span 3;
+    }
+
+    .demo-layout .b {
+      grid-column: 4 / span 7;
+    }
+  }
+</style>

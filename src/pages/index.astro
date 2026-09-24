@@ -10,7 +10,7 @@ const projects = await getProjects();
 ---
 
 <Base>
-  <main>
+  <div class="wrap">
     <h1>{site.name}</h1>
     <p>{site.role} — {site.roleFocus}</p>
     <p>{site.intro}</p>
@@ -26,5 +26,5 @@ const projects = await getProjects();
         ))
       }
     </ol>
-  </main>
+  </div>
 </Base>
