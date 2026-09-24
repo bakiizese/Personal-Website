@@ -118,6 +118,13 @@ export const site = {
    */
   video: { provider: null } as Video, // [PLACEHOLDER]
 
+  contact: {
+    // REVIEW: the headline of the contact section.
+    heading: 'Tell me what you’re *building*.',
+    // REVIEW: what helps in a first message. Shown beside the email address.
+    note: 'A few lines on the project, the timeline, and whether it’s a full-time role or freelance work is plenty. I reply to every message.',
+  },
+
   // REVIEW: the short line beside the video.
   videoNote: 'Ninety seconds on who I am, how I work, and the kind of projects I want to take on next.',
 } as const;

@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+import { site } from '../config/site';
+import { getProjects } from '../lib/projects';
+
+const projects = (await getProjects()).filter((p) => p.data.status !== 'placeholder');
+---
+
+<Base title="Page not found" noindex>
+  <div class="wrap nf">
+    <p class="label muted"><span class="code">404</span> Page not found</p>
+    <h1 class="display title">Nothing <em>here</em>.</h1>
+    <p class="text">The link may be old, or the page may have moved. These still work:</p>
+
+    <ul class="options" role="list">
+      <li><a href="/">Home</a></li>
+      {
+        projects.map((p) => (
+          <li>
+            <a href={`/work/${p.id}/`}>{p.data.title}</a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <Button href={`mailto:${site.email}`} variant="text">Or email me</Button>
+  </div>
+</Base>
+
+<style>
+  .nf {
+    display: grid;
+    gap: var(--space-m);
+    justify-items: start;
+    padding-block: var(--space-2xl) var(--space-xl);
+  }
+
+  .code {
+    color: var(--accent-text);
+    margin-right: 0.9em;
+  }
+
+  .title {
+    font-size: var(--step-6);
+  }
+
+  .text {
+    font-size: var(--step-1);
+    color: var(--muted);
+    max-width: 36ch;
+  }
+
+  .options {
+    display: grid;
+    gap: var(--space-2xs);
+    padding-block: var(--space-s);
+    border-top: var(--rule);
+    border-bottom: var(--rule);
+    min-width: min(28rem, 100%);
+  }
+</style>

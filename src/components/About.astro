@@ -1,0 +1,118 @@
+---
+/** About: the bio on the left, skills grouped by how often I use them on the right. No bars, no percentages. */
+import { site } from '../config/site';
+import SectionHeader from './SectionHeader.astro';
+
+const [lead, ...rest] = site.about;
+---
+
+<section id="about" class="about" aria-labelledby="about-heading">
+  <div class="wrap">
+    <SectionHeader number="03" label="About" id="about-heading" aside={site.location} />
+
+    <div class="layout">
+      <div class="bio">
+        <p class="lead">{lead}</p>
+        {rest.map((para) => <p>{para}</p>)}
+      </div>
+
+      <div class="skills" aria-labelledby="skills-heading">
+        <h2 class="label muted" id="skills-heading">What I work with</h2>
+        <dl>
+          {
+            site.skills.map((group) => (
+              <div class="group">
+                <dt class="label">{group.group}</dt>
+                <dd>
+                  <ul role="list">
+                    {group.items.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    padding-top: var(--space-2xl);
+  }
+
+  .layout {
+    display: grid;
+    gap: var(--space-xl) var(--col-gap);
+    padding-top: var(--space-l);
+  }
+
+  @media (min-width: 64rem) {
+    .layout {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    .bio {
+      grid-column: 1 / span 6;
+    }
+
+    .skills {
+      grid-column: 8 / span 5;
+    }
+  }
+
+  .bio {
+    display: grid;
+    gap: var(--space-m);
+    align-content: start;
+  }
+
+  .lead {
+    font-family: var(--serif);
+    font-size: var(--step-3);
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+  }
+
+  .bio p:not(.lead) {
+    max-width: var(--measure);
+    color: var(--muted);
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+
+  .skills h2 {
+    padding-bottom: var(--space-xs);
+  }
+
+  .group {
+    display: grid;
+    grid-template-columns: minmax(7rem, 1fr) 2fr;
+    gap: var(--space-s);
+    padding-block: var(--space-s);
+    border-top: var(--rule);
+  }
+
+  .group:last-child {
+    border-bottom: var(--rule);
+  }
+
+  .group dt {
+    padding-top: 0.25em;
+  }
+
+  .group ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.15em 0;
+  }
+
+  .group li:not(:last-child)::after {
+    content: ',';
+    margin-right: 0.4em;
+    color: var(--muted);
+  }
+</style>
