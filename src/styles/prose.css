@@ -13,7 +13,7 @@
   font-size: var(--step-3);
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-display);
-  margin-top: 2.2em;
+  margin-top: 1.6em;
 }
 
 .prose h2 + * {

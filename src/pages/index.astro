@@ -2,27 +2,11 @@
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import IntroVideo from '../components/IntroVideo.astro';
-import SectionHeader from '../components/SectionHeader.astro';
-import { getProjects, statusLabel } from '../lib/projects';
-
-const projects = await getProjects();
+import WorkIndex from '../components/work/WorkIndex.astro';
 ---
 
 <Base>
   <Hero />
   <IntroVideo />
-
-  <!-- Phase 4 replaces this with the real Selected Work section. -->
-  <section id="work" class="wrap" style="padding-top: var(--space-2xl)" aria-labelledby="work-heading">
-    <SectionHeader number="02" label="Selected work" id="work-heading" />
-    <ol>
-      {
-        projects.map((p) => (
-          <li>
-            <a href={`/work/${p.id}/`}>{p.data.title}</a> — {p.data.summary} ({p.data.year}, {statusLabel[p.data.status]})
-          </li>
-        ))
-      }
-    </ol>
-  </section>
+  <WorkIndex />
 </Base>

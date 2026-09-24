@@ -21,9 +21,18 @@ order: 2
 featured: false
 status: live
 screenshots:
+  - src: ./screens/apps.webp
+    alt: "“Pick a door”: cards for the admin web app, the admin mobile app and the member app, each with demo logins and an Open live button"
+    caption: Three apps, one shared backend. Each opens live in the browser with a demo login.
+  - src: ./screens/architecture.webp
+    alt: Architecture diagram showing the admin web, admin mobile and member mobile clients calling one Express API, which is the only thing that talks to PostgreSQL
+    caption: The API is the only thing that touches the database, so every rule lives in one place.
+  - src: ./screens/backend.webp
+    alt: "“More than screens”: panels describing the Express API and its endpoints, the 99 backend tests, the CI checks, the one-command Docker setup, offline support, demo mode and security"
+    caption: The parts you don’t see in the apps.
   - src: ./screens/landing-mobile.webp
     alt: The Warriors Gym landing page on a phone
-    caption: The landing page opens all three apps in the browser.
+    caption: The landing page on a phone.
 ---
 
 ## One API, three clients

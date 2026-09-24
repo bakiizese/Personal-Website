@@ -1,0 +1,198 @@
+---
+/**
+ * One row of the work index: thumbnail, number, title, one-line summary, stack, year.
+ * The whole row is clickable through the title link's stretched ::after, so screen readers
+ * hear one short link (the title) instead of the whole row.
+ */
+import { Image } from 'astro:assets';
+import type { Project } from '../../lib/projects';
+import { statusLabel } from '../../lib/projects';
+import StackList from '../StackList.astro';
+
+interface Props {
+  project: Project;
+  number: number;
+}
+
+const { project, number } = Astro.props;
+const { data } = project;
+const no = String(number).padStart(2, '0');
+---
+
+<li class="row" data-status={data.status}>
+  <div class="thumb">
+    <Image src={data.thumbnail} alt="" widths={[240, 400, 640]} sizes="(min-width: 64rem) 16vw, 32vw" loading="lazy" />
+  </div>
+
+  <div class="main">
+    <p class="no label" aria-hidden="true">No. {no}</p>
+    <h3 class="title">
+      <a href={`/work/${project.id}/`}>{data.title}</a>
+    </h3>
+    <p class="summary muted">{data.summary}</p>
+  </div>
+
+  <div class="stack"><StackList items={data.stack} limit={4} /></div>
+
+  <p class="when label muted">
+    <span>{data.year}</span>
+    <span class:list={['status', { flag: data.status === 'placeholder' }]}>{statusLabel[data.status]}</span>
+  </p>
+
+  <span class="arrow" aria-hidden="true">→</span>
+</li>
+
+<style>
+  .row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr);
+    grid-template-areas:
+      'thumb main'
+      'thumb stack'
+      'thumb when';
+    gap: var(--space-2xs) var(--space-s);
+    align-items: start;
+    padding-block: var(--space-m);
+    border-bottom: var(--rule);
+  }
+
+  .thumb {
+    grid-area: thumb;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border: var(--rule);
+    background: var(--surface);
+  }
+
+  .thumb :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur-slow) var(--ease-out);
+  }
+
+  .no {
+    color: var(--accent-text);
+  }
+
+  .main {
+    grid-area: main;
+    display: grid;
+    gap: var(--space-3xs);
+  }
+
+  .title {
+    font-family: var(--serif);
+    font-size: var(--step-2);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+
+  .title a {
+    text-decoration: none;
+  }
+
+  /* Stretch the title link over the whole row. */
+  .title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .title a:focus-visible {
+    outline: none;
+  }
+
+  .row:has(.title a:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  .summary {
+    font-size: var(--step--1);
+    max-width: 52ch;
+  }
+
+  .stack {
+    grid-area: stack;
+  }
+
+  .when {
+    grid-area: when;
+    display: flex;
+    gap: var(--space-s);
+  }
+
+  .flag {
+    color: var(--accent-text);
+  }
+
+  .arrow {
+    display: none;
+  }
+
+  .row:hover .title a {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 2px;
+  }
+
+  .row:hover .thumb :global(img) {
+    transform: scale(1.04);
+  }
+
+  @media (min-width: 64rem) {
+    .row {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-areas: none;
+      align-items: center;
+      column-gap: var(--col-gap);
+      padding-block: var(--space-s);
+      transition: background-color var(--dur-fast) ease;
+    }
+
+    .thumb {
+      grid-area: auto;
+      grid-column: 1 / span 2;
+    }
+
+    .main {
+      grid-area: auto;
+      grid-column: 3 / span 5;
+    }
+
+    .stack {
+      grid-area: auto;
+      grid-column: 8 / span 3;
+    }
+
+    .when {
+      grid-area: auto;
+      grid-column: 11;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .arrow {
+      display: block;
+      grid-column: 12;
+      justify-self: end;
+      font-size: var(--step-2);
+      line-height: 1;
+      color: var(--muted);
+      transition:
+        transform var(--dur-med) var(--ease-out),
+        color var(--dur-fast) ease;
+    }
+
+    .row:hover {
+      background: var(--surface);
+    }
+
+    .row:hover .arrow {
+      color: var(--accent-text);
+      transform: translateX(-4px);
+    }
+  }
+</style>

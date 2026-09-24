@@ -61,6 +61,15 @@ try {
     for (const route of routes) {
       await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'networkidle' });
       await page.evaluate(() => document.fonts.ready);
+      // Scroll through the page so lazy-loaded images load before the full-page capture.
+      await page.evaluate(async () => {
+        for (let y = 0; y < document.body.scrollHeight; y += innerHeight / 2) {
+          scrollTo(0, y);
+          await new Promise((r) => setTimeout(r, 60));
+        }
+        scrollTo(0, 0);
+      });
+      await page.waitForLoadState('networkidle');
       const name = (route.replace(/^\/|\/$/g, '').replace(/\//g, '_') || 'home') + `-${width}${dark ? '-dark' : ''}.png`;
       await page.screenshot({ path: join(outDir, name), fullPage: true });
       console.log(`screenshots/${name}`);
