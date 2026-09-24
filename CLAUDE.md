@@ -40,6 +40,8 @@ npm run brand           # regenerate public/og.png and favicons (after name/role
 - Geist Mono (`--mono`, `.label`) for small uppercase meta: `(02) Selected work`, dates, stack.
 - Fluid scale `--step--2` … `--step-6`. No Inter, no system font as the main face.
 
+**Hero portrait:** it stands beside the name, not over it. The layered overlap from the original brief was dropped because Bereket wants his name fully readable. The portrait's `left` is derived from the measured surname width in `Hero.astro`.
+
 **Vertical rhythm:** keep it compact. The hero is sized by its content, not the viewport. Sections are separated by `--space-2xl`, and headlines don't get extra air above and below. Bereket found the first, airier version "stretched".
 
 **Layout:**

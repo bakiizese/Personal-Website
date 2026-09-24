@@ -1,10 +1,10 @@
 ---
 /**
- * The hero: name set large, the cut-out portrait standing in front of the end of the surname,
+ * The hero: name set large, the cut-out portrait standing beside it on the bottom rule,
  * a soft warm "window light" behind the portrait, and the key facts a visitor needs in 10 seconds.
  *
  * Desktop: role, intro and actions sit top-left; the name runs along the bottom like a masthead,
- * and the portrait's shoulder covers the tail of the surname. Mobile: name, portrait, then copy.
+ * with the portrait just to its right. Mobile: name, portrait, then copy.
  *
  * Portrait: the first of src/assets/portrait.{png,webp,avif} is used. Remove the file and a quiet
  * placeholder takes its place. It's height-driven and bottom-anchored, so a taller seated photo fits too.
@@ -292,7 +292,7 @@ const portrait = Object.values(found)[0]?.default;
   }
 
   /* Desktop: copy top-left, name along the bottom, portrait standing on the bottom rule
-     with its shoulder in front of the end of the surname. */
+     just to the right of the surname. */
   @media (min-width: 64rem) {
     .stage {
       grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -332,12 +332,12 @@ const portrait = Object.values(found)[0]?.default;
     }
 
     /* Anchored to the name, not the grid: "Zeselassie" is 3.7em wide in Newsreader italic,
-       so starting the portrait at 3.45em puts the shoulder over about half of the final letter
-       at every desktop width. Re-measure if the display font changes. */
+       so starting the portrait just past that keeps the whole name clear of the photo at every
+       desktop width (Bereket preferred no overlap). Re-measure if the display font changes. */
     .portrait {
       position: absolute;
       z-index: 2;
-      left: calc(var(--gutter) + var(--name-size) * 3.45);
+      left: calc(var(--gutter) + var(--name-size) * 3.7 + var(--space-m));
       bottom: 0;
       height: calc(100% - var(--space-l));
       margin: 0;
