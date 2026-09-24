@@ -3,6 +3,10 @@ import { defineConfig, fontProviders } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { site } from './src/config/site.ts';
+import { projectSlugs, readProject } from './scripts/lib/frontmatter.mjs';
+
+// Pages kept out of the sitemap: the style guide and any project still marked as a placeholder.
+const hidden = ['/styleguide', ...projectSlugs().filter((s) => readProject(s).status === 'placeholder').map((s) => `/work/${s}/`)];
 
 // Fonts come straight from the installed @fontsource packages: no network at build time,
 // self-hosted, and Astro generates metric-matched fallbacks so text doesn't jump when they load.
@@ -14,7 +18,7 @@ const file = (pkg, name) => `./node_modules/${pkg}/files/${name}`;
 export default defineConfig({
   site: site.url,
   trailingSlash: 'ignore',
-  integrations: [mdx(), sitemap({ filter: (page) => !page.includes('/styleguide') })],
+  integrations: [mdx(), sitemap({ filter: (page) => !hidden.some((path) => page.includes(path)) })],
   build: { inlineStylesheets: 'auto' },
   prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
   fonts: [

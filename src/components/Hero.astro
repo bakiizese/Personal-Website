@@ -406,6 +406,11 @@ const portrait = Object.values(found)[0]?.default;
     @media (prefers-reduced-motion: no-preference) and (min-width: 64rem) {
       .portrait :global(picture) {
         animation: drift linear both;
+      }
+
+      /* Kept in a separate, more specific rule: the CSS minifier otherwise folds the timeline
+         into the `animation` shorthand, which can't carry it, and the browser drops the lot. */
+      .stage .portrait :global(picture) {
         animation-timeline: scroll(root);
         animation-range: 0 100vh;
       }

@@ -8,7 +8,8 @@
     "preview": "astro preview",
     "check:projects": "node scripts/check-projects.mjs",
     "thumbs": "node scripts/placeholder-thumbs.mjs",
-    "shots": "node scripts/shots.mjs"
+    "shots": "node scripts/shots.mjs",
+    "brand": "node scripts/brand-assets.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.0.2",

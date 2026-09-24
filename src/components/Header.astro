@@ -12,7 +12,7 @@ const nav = [
 
 <header class="site-header">
   <div class="wrap bar">
-    <a class="name" href="/" aria-label={`${site.name}, home`}>
+    <a class="name" href="/">
       <span class="full">{site.name}</span>
       <span class="short" aria-hidden="true">{site.monogram}</span>
     </a>
@@ -78,9 +78,18 @@ const nav = [
   }
 
   @media (max-width: 47.99rem) {
-    .full,
     .status {
       display: none;
+    }
+
+    /* The full name stays as the link's accessible name; the monogram is decorative. */
+    .full {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
 
     .short {

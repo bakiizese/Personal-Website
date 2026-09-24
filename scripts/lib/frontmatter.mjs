@@ -33,6 +33,7 @@ export function readProject(slug) {
     title: field('title') ?? slug,
     year: field('year') ?? '',
     order: field('order') ?? '',
+    status: field('status') ?? '',
     thumbnail: field('thumbnail'),
     stack,
     images,

@@ -4,7 +4,7 @@
  * the bottom half is the 2-minute read (the MDX Approach, screenshots, links).
  */
 import type { GetStaticPaths } from 'astro';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import SectionHeader from '../../components/SectionHeader.astro';
@@ -35,6 +35,9 @@ const { Content, headings } = await render(project);
 const toc = headings.filter((h) => h.depth === 2);
 const pad = (n: number) => String(n).padStart(2, '0');
 
+// Share image: the project's own thumbnail, cropped to the 1200×630 link-preview size.
+const og = await getImage({ src: data.thumbnail, width: 1200, height: 630, fit: 'cover', format: 'jpeg', quality: 82 });
+
 const links = [
   data.links.live && { label: 'Live site', href: data.links.live },
   data.links.docs && { label: 'API docs', href: data.links.docs },
@@ -43,7 +46,7 @@ const links = [
 ].filter(Boolean) as { label: string; href: string }[];
 ---
 
-<Base title={data.title} description={data.summary}>
+<Base title={data.title} description={data.summary} image={og.src} imageAlt={data.thumbnailAlt} type="article" noindex={data.status === 'placeholder'}>
   <article class="project">
     <div class="wrap">
       <nav class="crumbs label" aria-label="Breadcrumb">

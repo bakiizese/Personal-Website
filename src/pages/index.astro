@@ -7,9 +7,25 @@ import About from '../components/About.astro';
 import Experience from '../components/Experience.astro';
 import Testimonials from '../components/Testimonials.astro';
 import Contact from '../components/Contact.astro';
+import { site } from '../config/site';
+
+// Tells search engines who this site is about. Only real links are included.
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  jobTitle: site.role,
+  description: site.description,
+  url: site.url,
+  image: new URL('/og.png', site.url).href,
+  email: `mailto:${site.email}`,
+  address: { '@type': 'PostalAddress', addressLocality: 'Addis Ababa', addressCountry: 'ET' },
+  sameAs: site.links.map((l) => l.href).filter(Boolean),
+  knowsAbout: site.skills[0]?.items,
+};
 ---
 
-<Base>
+<Base schema={schema}>
   <Hero />
   <IntroVideo />
   <WorkIndex />
