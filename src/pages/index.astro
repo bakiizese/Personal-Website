@@ -1,22 +1,20 @@
 ---
-// Phase 1 scaffold: proves the content pipeline end to end. Replaced by the real sections in phases 3–5.
-import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import { site } from '../config/site';
+import Hero from '../components/Hero.astro';
+import IntroVideo from '../components/IntroVideo.astro';
+import SectionHeader from '../components/SectionHeader.astro';
 import { getProjects, statusLabel } from '../lib/projects';
-import portrait from '../assets/portrait.png';
 
 const projects = await getProjects();
 ---
 
 <Base>
-  <div class="wrap">
-    <h1>{site.name}</h1>
-    <p>{site.role} — {site.roleFocus}</p>
-    <p>{site.intro}</p>
-    <Image src={portrait} alt={site.portrait.alt} width={400} />
+  <Hero />
+  <IntroVideo />
 
-    <h2>Work</h2>
+  <!-- Phase 4 replaces this with the real Selected Work section. -->
+  <section id="work" class="wrap" style="padding-top: var(--space-2xl)" aria-labelledby="work-heading">
+    <SectionHeader number="02" label="Selected work" id="work-heading" />
     <ol>
       {
         projects.map((p) => (
@@ -26,5 +24,5 @@ const projects = await getProjects();
         ))
       }
     </ol>
-  </div>
+  </section>
 </Base>

@@ -11,18 +11,23 @@ const { open, label, detail } = site.availability;
 
 <p class:list={['availability label', { off: !open }]}>
   <span class="dot" aria-hidden="true"></span>
-  <span>{compact ? (open ? 'Available' : 'Unavailable') : label}</span>
-  {!compact && detail && <span class="muted">· {detail}</span>}
+  <span>
+    {compact ? (open ? 'Available' : 'Unavailable') : label}
+    {!compact && detail && <span class="muted"> · {detail}</span>}
+  </span>
 </p>
 
 <style>
   .availability {
     display: inline-flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.6em;
   }
 
   .dot {
+    flex: none;
+    /* Centre on the first line of text (line-height 1.4em), even when the label wraps. */
+    margin-top: calc((1.4em - 0.55rem) / 2);
     width: 0.55rem;
     height: 0.55rem;
     border-radius: 50%;
