@@ -79,7 +79,7 @@ npm run brand           # regenerate public/og.png and favicons (after name/role
 - **Image scripts can't load `file://` fonts or images** into a page set from `about:blank`. Use `scripts/lib/fonts.mjs` (data URIs) and embed images as data URIs. Font family names there are prefixed (`'BZ Serif'`) because an unquoted `Serif` is the generic keyword.
 - **The CSS minifier folds `animation-timeline` into the `animation` shorthand**, which invalidates it. Keep scroll-timeline properties in a separate, more specific rule (see `Hero.astro`).
 - The fonts use Astro's `local` provider pointing into `node_modules/@fontsource*`. The `npm` provider silently drops the variable fonts (`woff2-variations`).
-- `site.url` is a `.invalid` placeholder until there's a domain; canonical, Open Graph and sitemap URLs all come from it.
+- `site.url` (https://bereket-zeselassie-embaye.vercel.app) feeds canonical, Open Graph and sitemap URLs. Update it if the domain changes. Hosting is Vercel, configured by `vercel.json`; pushing to `main` deploys production, and other branches get preview deployments.
 
 ## Workflow
 

@@ -38,8 +38,8 @@ export const site = {
    */
   showPlaceholders: false,
 
-  /** Full origin, no trailing slash. [PLACEHOLDER] until you have a domain. `.invalid` is a reserved TLD. */
-  url: 'https://placeholder.invalid',
+  /** Full origin, no trailing slash. Used for canonical URLs, link previews and the sitemap. */
+  url: 'https://bereket-zeselassie-embaye.vercel.app',
 
   name: 'Bereket Zeselassie',
   firstName: 'Bereket',
